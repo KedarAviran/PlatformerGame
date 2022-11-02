@@ -8,7 +8,7 @@ namespace ServerSim
     class MapInstance
     {
         private int figureIDCounter = 0;
-        const double UPDATETIMER = 0.01; // IN SECONDS
+        const double UPDATETIMER = 1; // IN SECONDS
         List<Player> players;
         List<Monster> monsters;
         Map map; // READ ONLY
@@ -17,9 +17,9 @@ namespace ServerSim
         {
             players = new List<Player>();
             map = DataHolder.getMap(mapID);
-            createMonsters(map.getSpawns());
+            //createMonsters(map.getSpawns());
             time = DateTime.UtcNow;
-            Update();
+            //Update();
         }
         public void createMonsters(List<Spawn> spawns)
         {

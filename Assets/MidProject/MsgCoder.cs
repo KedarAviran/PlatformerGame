@@ -6,12 +6,12 @@ namespace MidProject
 {
     static class MsgCoder
     {
-        enum ClientToServer
+        public enum ClientToServer
         {
             moveRequest,
             useSkill
         }
-        enum ServerToClient
+        public enum ServerToClient
         {
             newLocationOfFigure,
             FigureSkill,
@@ -58,10 +58,13 @@ namespace MidProject
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeBytes(data);
             int cmd = buffer.readInteger();
-            if (cmd == (int)ClientToServer.moveRequest)
-                return fillMoveRequest(buffer);
-            if (cmd == (int)ClientToServer.useSkill)
-                return fillSkillRequest(buffer);
+            switch (cmd)
+            {
+                case (int)ClientToServer.moveRequest:
+                    return fillMoveRequest(buffer);
+                case (int)ClientToServer.useSkill:
+                    return fillSkillRequest(buffer);
+            }
             return null;
         }
         public static byte[] newLocationOrder(int figureID, Vector2 pos)

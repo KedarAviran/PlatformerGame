@@ -43,7 +43,7 @@ namespace ServerSim
                         break;
                 }
             }
-            maps.Add(new Map(1, spawns, npcs, ladders, floors, spawns[0].pos));
+            maps.Add(new Map(0, spawns, npcs, ladders, floors, spawns[0].pos));
         }
         public static void LoadMonsterData(string fileLoc)
         {
