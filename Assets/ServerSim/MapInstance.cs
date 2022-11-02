@@ -34,6 +34,7 @@ namespace ServerSim
         public void addPlayer(Player player)
         {
             player.setID(++figureIDCounter);
+            player.updatePosition(map.getSpawnPoint());
             players.Add(player);
         }
         public void Update()

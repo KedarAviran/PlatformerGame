@@ -18,30 +18,54 @@ public class ComSim : MonoBehaviour
         map.addPlayer(new Player());
         player = Instantiate(playerGameObject);
     }
-    public void sendMsgToServer(byte[] data)
-    {
-        receiveMsgClient(data);
-    }
     public void receiveMsgServer(byte[] data)
     {
         DataContainer cont = MsgCoder.getDataContainerServer(data);
-        //handle msg
-    }
-    public void sendMsgToClient(byte[] data)
-    {
-        receiveMsgServer(data);
+        switch (cont.requestType)
+        {
+            case (int)MsgCoder.ClientToServer.moveRequest:
+                handleMoveRequest(cont);
+                break;
+            case (int)MsgCoder.ClientToServer.useSkill:
+                handleUseSkill(cont);
+                break;
+        }
     }
     public void receiveMsgClient(byte[] data)
     {
-        DataContainer cont = MsgCoder.getDataContainerClient(data);
+        DataContainer cont = MsgCoder.getDataContainerServer(data);
         switch (cont.requestType)
         {
-            default:
+            case (int)MsgCoder.ServerToClient.newLifeOfFigure:
+                handleNewLifeOfFigure(cont);
+                break;
+            case (int)MsgCoder.ServerToClient.FigureSkill:
+                handleFigureSkill(cont);
+                break;
+            case (int)MsgCoder.ServerToClient.newLocationOfFigure:
+                handleNewLocationOfFigure(cont);
                 break;
         }
-        //handle msg
     }
-    private void handleMovePlayer(DataContainer data) // CLIENT
+    // SERVER
+    private void handleMoveRequest(DataContainer data)
+    {
+
+    }
+    private void handleUseSkill(DataContainer data)
+    {
+
+    }
+    // CLIENT
+    private void handleNewLifeOfFigure(DataContainer data)
+    {
+
+    }
+    private void handleFigureSkill(DataContainer data)
+    {
+
+    }
+    private void handleNewLocationOfFigure(DataContainer data) 
     {
 
     }
