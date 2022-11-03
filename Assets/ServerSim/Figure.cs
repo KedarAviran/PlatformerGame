@@ -9,7 +9,7 @@ namespace ServerSim
     {
         protected Colider2D colider;
         protected int figureID;
-        protected Vector2 pos;
+        protected Vector2 pos = Vector2.Zero;
         protected void updateColider()
         {
             colider.updateColider(pos);
@@ -18,6 +18,10 @@ namespace ServerSim
         {
             this.pos = pos;
             updateColider();
+        }
+        public Vector2 getPos()
+        {
+            return pos;
         }
         public int getID()
         {
