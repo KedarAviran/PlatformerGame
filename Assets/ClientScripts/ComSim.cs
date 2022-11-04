@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ServerSim;
 using MidProject;
+using System;
 
 public class ComSim : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class ComSim : MonoBehaviour
         map = new MapInstance(0);
         instance = this;
         map.addPlayer();
+    }
+    public void log(string msg)
+    {
+        Debug.Log(msg);
     }
     public void receiveMsgServer(byte[] data)
     {
@@ -36,16 +41,16 @@ public class ComSim : MonoBehaviour
         cmds.Add(cont);
     }
     // SERVER
-    private void handleMoveRequest(DataContainer data)
+    private void handleMoveRequest(DataContainer data)//1-right 2-left 3-jump 
     {
-
+        map.movePlayer(1, data.integers[0]);
     }
     private void handleUseSkill(DataContainer data)
     {
 
     }
     // CLIENT
-    List<DataContainer> cmds = new List<DataContainer>(); 
+    
     private void handleNewLifeOfFigure(DataContainer data)
     {
 
@@ -56,7 +61,8 @@ public class ComSim : MonoBehaviour
     }
     private void handleNewLocationOfFigure(DataContainer data) 
     {
-        player.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
+        if (player != null)
+            player.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
     }
     private void handleNewFigure(DataContainer data)
     {
@@ -64,11 +70,15 @@ public class ComSim : MonoBehaviour
         player.name = "Player ID: " + data.integers[0];
         player.transform.position=new Vector3(data.floats[0], data.floats[1],0);
     }
+    List<DataContainer> cmds = new List<DataContainer>();
     public void executeOrders()
     {
-        while(cmds.Count>0)
+        while (cmds.Count > 0)
         {
             DataContainer cont = cmds[0];
+            cmds.RemoveAt(0);
+            if (cont == null)
+                return;
             switch (cont.requestType)
             {
                 case (int)MsgCoder.ServerToClient.newLifeOfFigure:
@@ -84,7 +94,6 @@ public class ComSim : MonoBehaviour
                     handleNewFigure(cont);
                     break;
             }
-            cmds.Remove(cont);
         }
     }
     public void Update()

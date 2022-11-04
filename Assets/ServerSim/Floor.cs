@@ -10,7 +10,7 @@ namespace ServerSim
         // y=mx+n
         private float m;
         private float n;
-
+        private const float COLIDEDISTANCE = 0.001f;
         private Colider2D colider;
         public Floor(Vector2 pos, float width, float height, float angle)
         {
@@ -18,7 +18,7 @@ namespace ServerSim
             m = (colider.getTopLeft().Y - colider.getTopRight().Y) / (colider.getTopLeft().X - colider.getTopRight().X);
             n = colider.getTopLeft().Y - m * colider.getTopLeft().X;
         }
-        public float getYByX(float x)
+        private float getYByX(float x)
         {
             return m * x + n;
         }
@@ -36,6 +36,18 @@ namespace ServerSim
             if (distanceRight * distanceLeft > 0)
                 return Math.Min(distanceRight, distanceLeft);
             return Math.Max(distanceRight, distanceLeft);
+        }
+        public float getYofFloor()
+        {
+            return colider.getTopRight().Y;
+        }
+        public bool isColidingWithFigure(Figure figure)
+        {
+            Colider2D figureColider = figure.GetColider2D();
+            if (isDirectlyAbove(figureColider))
+                if (distanceFromFeetToTop(figureColider) < COLIDEDISTANCE)
+                    return true;
+            return false;
         }
     }
 }

@@ -11,12 +11,11 @@ namespace ServerSim
     class MapInstance
     {
         private int figureIDCounter = 0;
-        const double UPDATETIMER = 0.005; // IN SECONDS
+        const double UPDATETIMER = 0.1; // IN  MILISECONDS
         List<Player> players;
         List<Monster> monsters;
         Map map; // READ ONLY
         private DateTime time;
-        private float gravityFactor = 0.05f;
         public MapInstance(int mapID)
         {
             players = new List<Player>();
@@ -36,6 +35,13 @@ namespace ServerSim
                 monsters.Add(mon);
             }
         }
+        public Player getPlayerByID(int figureID)
+        {
+            foreach (Player player in players)
+                if (player.getID() == figureID)
+                    return player;
+            return null;
+        }
         public void addPlayer()
         {
             Player player = new Player(map.getSpawnPoint());
@@ -43,13 +49,31 @@ namespace ServerSim
             players.Add(player);
             ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, player.getPos()));
         }
+        public void movePlayer(int figureID , int side)//1-right 2-left 3-jump 
+        {
+            Player player = getPlayerByID(figureID);
+            player.move(side);
+            checkFigureOnAir(player);
+        }
+        private void checkFigureOnAir(Figure figure)
+        {
+            if (figure.getVerticalVelocity() > 0)
+                return;
+            foreach (Floor floor in map.getFloors())
+                if (floor.isColidingWithFigure(figure))
+                {
+                    figure.setOnAir(false);
+                    return;
+                }
+            figure.setOnAir(true);  
+        }
         public void Update()
         {
             TimeSpan delta;
             while (true)
             {
                 delta = DateTime.UtcNow - time;
-                if (UPDATETIMER < delta.TotalSeconds)
+                if (UPDATETIMER < delta.TotalMilliseconds)
                 {
                     time = DateTime.UtcNow;
                     UpdateInstance(delta);
@@ -58,8 +82,15 @@ namespace ServerSim
         }
         public void UpdateInstance(TimeSpan delta)
         {
-            players[0].updatePosition(players[0].getPos() - new Vector2(0, gravityFactor));
-            ComSim.instance.receiveMsgClient(MsgCoder.newLocationOrder(players[0].getID(), players[0].getPos()));
+            foreach (Player player in players)
+            {
+                if (player.getOnAir())
+                {
+                    player.applyGravity(delta);
+                    checkFigureOnAir(player);
+                }
+                player.sendUpdateToClient();
+            }
         }
     }
 }

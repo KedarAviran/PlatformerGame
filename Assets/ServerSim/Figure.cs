@@ -2,14 +2,22 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using MidProject;
 
 namespace ServerSim
 {
     class Figure
     {
+        public bool update = false;
+        private bool onAir = true;
         protected Colider2D colider;
         protected int figureID;
         protected Vector2 pos = Vector2.Zero;
+        private float jumpVelocity = 1f;
+        private float baseGravityFactor = -1f; // unit per sec
+        private float verticalVelocity = 0;
+        private float moveSpeed = 0.1f;
+        private float minVerticalVelocity = -0.01f;
         protected void updateColider()
         {
             colider.updateColider(pos);
@@ -18,10 +26,19 @@ namespace ServerSim
         {
             this.pos = pos;
             updateColider();
+            update = true;
         }
         public Vector2 getPos()
         {
             return pos;
+        }
+        public float getVerticalVelocity()
+        {
+            return verticalVelocity;
+        }
+        public Colider2D GetColider2D()
+        {
+            return colider;
         }
         public int getID()
         {
@@ -30,6 +47,57 @@ namespace ServerSim
         public void setID(int id)
         {
             this.figureID = id;
+        }
+        public bool getOnAir()
+        {
+            return onAir;
+        }
+        public void move(int side) // true = right || false = left
+        {
+            switch (side)
+            {
+                case 1:
+                    updatePosition(pos + new Vector2(moveSpeed, 0));
+                    break;
+                case 2:
+                    updatePosition(pos + new Vector2(-moveSpeed, 0));
+                    break;
+                case 3:
+                    jump();
+                    break;
+            }
+            update = true;
+        }
+        public void jump()
+        {
+            if (onAir)
+                return;
+            verticalVelocity = jumpVelocity;
+            setOnAir(true);
+        }
+        public void setOnAir(bool onAir)
+        {
+            if (onAir)
+                this.onAir = true;
+            else
+            {
+                this.onAir = false;
+                verticalVelocity = 0;
+            }
+        }
+        
+        public void applyGravity(TimeSpan span)
+        {
+            verticalVelocity += baseGravityFactor * (float)span.TotalSeconds;
+            if (verticalVelocity < minVerticalVelocity)
+                verticalVelocity = minVerticalVelocity;
+            updatePosition(pos + new Vector2(0, verticalVelocity));
+        }
+        public void sendUpdateToClient()
+        {
+            if(update)
+                ComSim.instance.receiveMsgClient(MsgCoder.newLocationOrder(figureID, pos));
+            update = false;
         }
 
     }
