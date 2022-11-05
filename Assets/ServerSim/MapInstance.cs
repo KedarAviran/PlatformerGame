@@ -11,10 +11,11 @@ namespace ServerSim
     class MapInstance
     {
         private int figureIDCounter = 0;
-        const double UPDATETIMER = 0.1; // IN  MILISECONDS
+        const double UPDATETIMER = 0.01; // IN  SECONDS
         List<Player> players;
         List<Monster> monsters;
         Map map; // READ ONLY
+        private const float DISTANCEFROMGROUND = 0f;
         private DateTime time;
         public MapInstance(int mapID)
         {
@@ -60,9 +61,10 @@ namespace ServerSim
             if (figure.getVerticalVelocity() > 0)
                 return;
             foreach (Floor floor in map.getFloors())
-                if (floor.isColidingWithFigure(figure))
+                if (floor.checkFigureColision(figure))
                 {
                     figure.setOnAir(false);
+                    figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y) + DISTANCEFROMGROUND));
                     return;
                 }
             figure.setOnAir(true);  
@@ -73,7 +75,7 @@ namespace ServerSim
             while (true)
             {
                 delta = DateTime.UtcNow - time;
-                if (UPDATETIMER < delta.TotalMilliseconds)
+                if (UPDATETIMER < delta.TotalSeconds)
                 {
                     time = DateTime.UtcNow;
                     UpdateInstance(delta);

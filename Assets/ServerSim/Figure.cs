@@ -13,11 +13,11 @@ namespace ServerSim
         protected Colider2D colider;
         protected int figureID;
         protected Vector2 pos = Vector2.Zero;
-        private float jumpVelocity = 1f;
+        private float jumpVelocity = 0.5f;
         private float baseGravityFactor = -1f; // unit per sec
         private float verticalVelocity = 0;
         private float moveSpeed = 0.1f;
-        private float minVerticalVelocity = -0.01f;
+        private float minVerticalVelocity = -5f;
         protected void updateColider()
         {
             colider.updateColider(pos);
@@ -89,7 +89,7 @@ namespace ServerSim
         public void applyGravity(TimeSpan span)
         {
             verticalVelocity += baseGravityFactor * (float)span.TotalSeconds;
-            if (verticalVelocity < minVerticalVelocity)
+            if (verticalVelocity < minVerticalVelocity) // apply min velocity
                 verticalVelocity = minVerticalVelocity;
             updatePosition(pos + new Vector2(0, verticalVelocity));
         }
