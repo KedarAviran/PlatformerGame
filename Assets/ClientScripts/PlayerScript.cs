@@ -15,11 +15,17 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         if (Input.GetKey(KeyCode.RightArrow))
-            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(1));
+            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Right));
         if (Input.GetKey(KeyCode.LeftArrow))
-            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(2));
+            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Left));
         if (Input.GetKey(KeyCode.Space))
-            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(3));
+            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Jump));
+        if (Input.GetKey(KeyCode.UpArrow))
+            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Up));
+        if (Input.GetKey(KeyCode.DownArrow))
+            ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Down));
+        Camera.main.transform.position = transform.position - new Vector3(0,0,10);
+
 
     }
 }

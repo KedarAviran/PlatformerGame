@@ -52,18 +52,24 @@ namespace ServerSim
         {
             return onAir;
         }
-        public void move(int side) // true = right || false = left
+        public void move(int dir)
         {
-            switch (side)
+            switch (dir)
             {
-                case 1:
+                case (int)MsgCoder.Direction.Right:
                     updatePosition(pos + new Vector2(moveSpeed, 0));
                     break;
-                case 2:
+                case (int)MsgCoder.Direction.Left:
                     updatePosition(pos + new Vector2(-moveSpeed, 0));
                     break;
-                case 3:
+                case (int)MsgCoder.Direction.Jump:
                     jump();
+                    break;
+                case (int)MsgCoder.Direction.Up:
+                    updatePosition(pos + new Vector2(0, moveSpeed));
+                    break;
+                case (int)MsgCoder.Direction.Down:
+                    updatePosition(pos + new Vector2(0, -moveSpeed));
                     break;
             }
             update = true;

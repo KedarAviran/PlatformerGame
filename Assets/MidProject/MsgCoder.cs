@@ -18,11 +18,19 @@ namespace MidProject
             newLifeOfFigure,
             newFigure
         }
-        public static byte[] moveRequest(int side) //1-right 2-left 3-jump
+        public enum Direction
+        {
+            Right,
+            Left,
+            Jump,
+            Up,
+            Down
+        }
+        public static byte[] moveRequest(Direction dir)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ClientToServer.moveRequest);
-            buffer.writeInteger(side);
+            buffer.writeInteger((int)dir);
             byte[] array = buffer.ToArray();
             buffer.Dispose();
             return array;

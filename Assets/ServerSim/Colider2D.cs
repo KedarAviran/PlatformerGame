@@ -81,11 +81,5 @@ namespace ServerSim
                 return true;
             return false;
         }
-        public bool isColiding(Colider2D colider)
-        {
-            if (isColiding(colider.topLeft) || isColiding(colider.topRight) || isColiding(colider.botRight) || isColiding(colider.botLeft))
-                return true;
-            return false;
-        }
     }
 }

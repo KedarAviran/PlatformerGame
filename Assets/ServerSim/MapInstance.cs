@@ -50,11 +50,37 @@ namespace ServerSim
             players.Add(player);
             ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, player.getPos()));
         }
-        public void movePlayer(int figureID , int side)//1-right 2-left 3-jump 
+        public void movePlayer(int figureID , int dir)
         {
             Player player = getPlayerByID(figureID);
-            player.move(side);
-            checkFigureOnAir(player);
+            if (dir != (int)MsgCoder.Direction.Up && dir != (int)MsgCoder.Direction.Down)
+            {
+                player.move(dir);
+                checkFigureOnAir(player);
+            }
+            else
+            {
+                if (isOnLadder(figureID))
+                {
+                    clearFloors(figureID);
+                    player.setOnAir(false);
+                    player.move(dir);
+                }
+            }
+                
+        }
+        public void clearFloors(int figureID)
+        {
+            foreach (Floor floor in map.getFloors())
+                floor.removeFigure(figureID);
+        }
+        private bool isOnLadder(int figureID)
+        {
+            Player player = getPlayerByID(figureID);
+            foreach (Ladder ldr in map.getLadders())
+                if (ldr.isOnLadder(player.GetColider2D()))
+                    return true;
+            return false;
         }
         private void checkFigureOnAir(Figure figure)
         {

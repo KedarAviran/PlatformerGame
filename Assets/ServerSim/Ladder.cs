@@ -14,7 +14,9 @@ namespace ServerSim
         }
         public bool isOnLadder(Colider2D figure)
         {
-            return colider.isColiding(figure);
+            if (figure.getBotRight().X < colider.getBotLeft().X || figure.getBotLeft().X > colider.getBotRight().X || figure.getBotRight().Y > colider.getTopLeft().Y || figure.getTopLeft().Y < colider.getBotRight().Y)
+                return false;
+            return true;
         }
     }
 }

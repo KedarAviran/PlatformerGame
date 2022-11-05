@@ -9,6 +9,7 @@ public class MapGenerator : MonoBehaviour
 {
     const string FILENAME = "map.txt";
     public GameObject floor;
+    public GameObject ladder;
     public bool GenerateMap;
     public bool LoadFromServer;
     void Start()
@@ -49,7 +50,9 @@ public class MapGenerator : MonoBehaviour
                     flr.transform.localScale = new Vector3(StringToFloat(parameters[3]), StringToFloat(parameters[4]),0);
                     break;
                 case "2":
-                    //ladders.Add(new Ladder(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), StringToFloat(parameters[3]), StringToFloat(parameters[4])));
+                    GameObject ldr = Instantiate(ladder);
+                    ldr.transform.position = new Vector3(StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0);
+                    ldr.transform.localScale = new Vector3(StringToFloat(parameters[3]), StringToFloat(parameters[4]), 0);
                     break;
                 case "3":
                     //spawns.Add(new Spawn(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), 0));
