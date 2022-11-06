@@ -41,7 +41,7 @@ public class ComSim : MonoBehaviour
         cmds.Add(cont);
     }
     // SERVER
-    private void handleMoveRequest(DataContainer data)//1-right 2-left 3-jump 
+    private void handleMoveRequest(DataContainer data)
     {
         map.movePlayer(1, data.integers[0]);
     }

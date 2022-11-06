@@ -25,6 +25,7 @@ namespace ServerSim
             List<Floor> floors = new List<Floor>();
             List<Ladder> ladders = new List<Ladder>();
             List<Spawn> spawns = new List<Spawn>();
+            List<Wall> walls = new List<Wall>();
             List<NPC> npcs = new List<NPC>();
             string[] lines = File.ReadAllText(MAPLOC).Split(Environment.NewLine);
             foreach(string line in lines)
@@ -32,6 +33,9 @@ namespace ServerSim
                 string[] parameters = line.Split(" ");
                 switch (parameters[0])
                 {
+                    case "0":
+                        walls.Add(new Wall(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), StringToFloat(parameters[3]), StringToFloat(parameters[4])));
+                        break;
                     case "1":
                         floors.Add(new Floor(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), StringToFloat(parameters[3]), StringToFloat(parameters[4]), StringToFloat(parameters[5])));
                         break;
@@ -43,7 +47,7 @@ namespace ServerSim
                         break;
                 }
             }
-            maps.Add(new Map(0, spawns, npcs, ladders, floors, spawns[0].pos));
+            maps.Add(new Map(0, spawns, npcs, ladders, floors, spawns[0].pos,walls));
         }
         public static void LoadMonsterData(string fileLoc)
         {

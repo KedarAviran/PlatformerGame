@@ -81,5 +81,11 @@ namespace ServerSim
                 return true;
             return false;
         }
+        public bool isParallelColiding(Colider2D figure)
+        {
+            if (figure.getBotRight().X < getBotLeft().X || figure.getBotLeft().X > getBotRight().X || figure.getBotRight().Y > getTopLeft().Y || figure.getTopLeft().Y < getBotRight().Y)
+                return false;
+            return true;
+        }
     }
 }

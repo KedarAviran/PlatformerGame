@@ -22,8 +22,9 @@ namespace ServerSim
         private List<NPC> npcs;
         private List<Ladder> ladders;
         private List<Floor> floors;
+        private List<Wall> walls;
         private Vector2 spawnPos;
-        public Map(int mapID, List<Spawn> spawns, List<NPC> npcs, List<Ladder> ladders, List<Floor> floors , Vector2 spawnPos)
+        public Map(int mapID, List<Spawn> spawns, List<NPC> npcs, List<Ladder> ladders, List<Floor> floors , Vector2 spawnPos , List<Wall> walls)
         {
             this.mapID = mapID;
             this.spawns = spawns;
@@ -31,6 +32,7 @@ namespace ServerSim
             this.ladders = ladders;
             this.floors = floors;
             this.spawnPos = spawnPos;
+            this.walls = walls;
         }
         public int getMapID()
         {
