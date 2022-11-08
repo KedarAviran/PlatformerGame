@@ -7,14 +7,18 @@ namespace ServerSim
 {
     class Wall
     {
-        Colider2D colider;
+        private Colider2D colider;
         public Wall(Vector2 pos, float width, float height)
         {
             colider = new Colider2D(pos, width, height,0);
         }
+        public Colider2D GetColider2D()
+        {
+            return colider;
+        }
         public bool isColiding(Colider2D figure)
         {
-            return colider.isParallelColiding(figure);
+            return (colider.isParallelColiding(figure) && colider.getBotRight().Y < figure.getBotRight().Y);
         }
     }
 }

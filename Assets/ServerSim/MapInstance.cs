@@ -57,6 +57,7 @@ namespace ServerSim
             {
                 player.move(dir);
                 checkFigureOnAir(player);
+                wallCheck(player);
             }
             else
             {
@@ -94,6 +95,23 @@ namespace ServerSim
                     return;
                 }
             figure.setOnAir(true);  
+        }
+        private bool wallCheck(Figure figure)
+        {
+            foreach (Wall wall in map.GetWalls())
+                if (wall.isColiding(figure.GetColider2D()))
+                {
+                    float wallLeftX = wall.GetColider2D().getBotLeft().X;
+                    float wallRightX = wall.GetColider2D().getBotRight().X;
+                    float figureRightX= figure.GetColider2D().getBotRight().X;
+                    float figureLeftX = figure.GetColider2D().getBotLeft().X;
+                    if (figureRightX >= wallLeftX && figureLeftX < wallLeftX)
+                        figure.updatePosition(new Vector2(wallLeftX - Math.Abs(figure.getPos().X - figureLeftX), figure.getPos().Y));
+                    else
+                        figure.updatePosition(new Vector2(wallRightX + Math.Abs(figure.getPos().X -figureLeftX), figure.getPos().Y));
+                    return true;
+                } 
+            return false;
         }
         public void Update()
         {

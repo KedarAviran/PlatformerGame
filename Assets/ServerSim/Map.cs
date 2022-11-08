@@ -46,6 +46,10 @@ namespace ServerSim
         {
             return npcs;
         }
+        public List<Wall> GetWalls()
+        {
+            return walls;
+        }
         public List<Ladder> getLadders()
         {
             return ladders;

@@ -30,7 +30,7 @@ namespace ServerSim
         }
         public Vector2 getPos()
         {
-            return pos;
+            return new Vector2(pos.X, pos.Y);
         }
         public float getVerticalVelocity()
         {
