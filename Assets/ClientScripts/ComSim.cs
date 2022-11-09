@@ -7,16 +7,37 @@ using System;
 
 public class ComSim : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Start is called before the first frame updatea
+    public struct Figure
+    {
+        public int figureID;
+        public GameObject gameObjectReference;
+        public Figure(int figureID, GameObject reference)
+        {
+            this.figureID = figureID;
+            this.gameObjectReference = reference;
+        }
+        
+    }
     MapInstance map;
     public static ComSim instance;
+    List<Figure> figures = new List<Figure>();
+    public GameObject monsterPrefab;
     public GameObject playerGameObject;
     private GameObject player;
+    
     void Start()
     {
-        map = new MapInstance(0);
         instance = this;
+        map = new MapInstance(0);
         map.addPlayer();
+    }
+    public Figure getFigureByID(int figureID)
+    {
+        foreach (Figure fig in figures)
+            if (fig.figureID == figureID)
+                return fig;
+        return figures[0];
     }
     public void log(string msg)
     {
@@ -43,7 +64,7 @@ public class ComSim : MonoBehaviour
     // SERVER
     private void handleMoveRequest(DataContainer data)
     {
-        map.movePlayer(1, data.integers[0]);
+        map.movePlayer(2, data.integers[0]);
     }
     private void handleUseSkill(DataContainer data)
     {
@@ -61,14 +82,29 @@ public class ComSim : MonoBehaviour
     }
     private void handleNewLocationOfFigure(DataContainer data) 
     {
-        if (player != null)
-            player.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
+        Figure figure = getFigureByID(data.integers[0]);
+        if (figure.gameObjectReference != null)
+            figure.gameObjectReference.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
     }
     private void handleNewFigure(DataContainer data)
     {
-        player = Instantiate(playerGameObject);
-        player.name = "Player ID: " + data.integers[0];
-        player.transform.position=new Vector3(data.floats[0], data.floats[1],0);
+        int figureID = data.integers[0];
+        switch (data.integers[1])
+        {
+            case (int)MsgCoder.Figures.player:
+                player = Instantiate(playerGameObject);
+                player.name = "Player ID: " + figureID;
+                player.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
+                figures.Add(new Figure(figureID, player));
+                break;
+            case (int)MsgCoder.Figures.monster:
+                GameObject monster = Instantiate(monsterPrefab);
+                monster.name = "monster ID: " + figureID;
+                monster.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
+                figures.Add(new Figure(figureID, monster));
+                break;
+        }
+        
     }
     List<DataContainer> cmds = new List<DataContainer>();
     public void executeOrders()

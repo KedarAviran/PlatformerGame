@@ -7,7 +7,8 @@ using ServerSim;
 
 public class MapGenerator : MonoBehaviour
 {
-    const string FILENAME = "map.txt";
+    const string MAPFILENAME = "map.txt";
+    const string MONSTERSFILENAME = "map.txt";
     public GameObject floor;
     public GameObject ladder;
     public GameObject wall;
@@ -25,12 +26,6 @@ public class MapGenerator : MonoBehaviour
         if (LoadFromServer)
             loadMap();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnApplicationQuit()
     {
         if (GenerateMap)
@@ -40,34 +35,39 @@ public class MapGenerator : MonoBehaviour
     {
         return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
     }
+    //public void generateMonsters()
+    //{
+    //    string monsters = "";
+    //    foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Monsters"))
+    //        monsters = monsters + obj.name + " " + obj.transform.localScale.x + " " + obj.transform.localScale.y + Environment.NewLine;
+    //    File.WriteAllText(MONSTERSFILENAME, monsters);
+    //}
     public void loadMap()// FOR TESTING ONLY
     {
-        //// FORMAT:
-        //// type=1(floor) + center + width + lenght + angle
-        //// type=2(ladder) + center + width + lenght
-        //// type=3(spawn) + center
-        string[] lines = File.ReadAllText(FILENAME).Split(Environment.NewLine);
+        string[] lines = File.ReadAllText(MAPFILENAME).Split(Environment.NewLine);
         foreach (string line in lines)
         {
             string[] parameters = line.Split(" ");
-            switch (parameters[0])
+            if (parameters[0] == "")
+                break;
+            switch (int.Parse(parameters[0]))
             {
-                case "0":
+                case (int)MapGenerator.ObjectType.wall:
                     GameObject wal = Instantiate(wall);
                     wal.transform.position = new Vector3(StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0);
                     wal.transform.localScale = new Vector3(StringToFloat(parameters[3]), StringToFloat(parameters[4]), 0);
                     break;
-                case "1":
+                case (int)MapGenerator.ObjectType.floor:
                     GameObject flr = Instantiate(floor);
                     flr.transform.position = new Vector3(StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0);
                     flr.transform.localScale = new Vector3(StringToFloat(parameters[3]), StringToFloat(parameters[4]),0);
                     break;
-                case "2":
+                case (int)MapGenerator.ObjectType.ladder:
                     GameObject ldr = Instantiate(ladder);
                     ldr.transform.position = new Vector3(StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0);
                     ldr.transform.localScale = new Vector3(StringToFloat(parameters[3]), StringToFloat(parameters[4]), 0);
                     break;
-                case "3":
+                case (int)MapGenerator.ObjectType.spawn:
                     //spawns.Add(new Spawn(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), 0));
                     break;
             }
@@ -76,10 +76,6 @@ public class MapGenerator : MonoBehaviour
     public void generateMap()
     {
         string map = "";
-        //// FORMAT:
-        //// type=1(floor) + center + width + lenght + angle
-        //// type=2(ladder) + center + width + lenght
-        //// type=3(spawn) + center
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Wall"))
             map = map + (int)ObjectType.wall + " " + obj.transform.position.x + " " + obj.transform.position.y + " " + obj.transform.localScale.x + " " + obj.transform.localScale.y + Environment.NewLine;
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Floor"))
@@ -87,7 +83,7 @@ public class MapGenerator : MonoBehaviour
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Ladder"))
             map = map + (int)ObjectType.ladder + " " + obj.transform.position.x + " " + obj.transform.position.y + " " + obj.transform.localScale.x + " " + obj.transform.localScale.y+ Environment.NewLine;
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Spawn"))
-            map = map + (int)ObjectType.spawn + " " + obj.transform.position.x + " " + obj.transform.position.y+Environment.NewLine;
-        File.WriteAllText(FILENAME, map);
+            map = map + (int)ObjectType.spawn + " " + obj.transform.position.x + " " + obj.transform.position.y + " " + obj.name + Environment.NewLine;
+        File.WriteAllText(MAPFILENAME, map);
     }
 }

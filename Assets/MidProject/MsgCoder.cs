@@ -26,6 +26,12 @@ namespace MidProject
             Up,
             Down
         }
+        public enum Figures
+        {
+            player,
+            monster,
+            npc
+        }
         public static byte[] moveRequest(Direction dir)
         {
             ByteBuffer buffer = new ByteBuffer();
@@ -97,11 +103,12 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
-        public static byte[] newFigureOrder(int figureID, Vector2 pos)
+        public static byte[] newFigureOrder(int figureID, Vector2 pos , int figureType)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ServerToClient.newFigure);
             buffer.writeInteger(figureID);
+            buffer.writeInteger(figureType);
             buffer.writeFloat(pos.X);
             buffer.writeFloat(pos.Y);
             byte[] array = buffer.ToArray();
@@ -112,6 +119,7 @@ namespace MidProject
         {
             DataContainer container = new DataContainer();
             container.requestType = (int)ServerToClient.newFigure;
+            container.integers.Add(buffer.readInteger());
             container.integers.Add(buffer.readInteger());
             container.floats.Add(buffer.readFloat());
             container.floats.Add(buffer.readFloat());

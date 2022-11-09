@@ -9,7 +9,7 @@ namespace ServerSim
     static class DataHolder
     {
         const string MAPLOC = "map.txt";
-        const string MONSTERLOC = "monster.txt";
+        const string MONSTERLOC = "monsters.txt";
         private static List<Map> maps = new List<Map>();
         private static List<Monster> monsters = new List<Monster>();
         public static float StringToFloat(string num)
@@ -18,10 +18,6 @@ namespace ServerSim
         }
         public static void LoadMapData(string fileLoc)
         {
-            //// FORMAT:
-            //// type=1(floor) + center + width + lenght + angle
-            //// type=2(ladder) + center + width + lenght
-            //// type=3(spawn) + center
             List<Floor> floors = new List<Floor>();
             List<Ladder> ladders = new List<Ladder>();
             List<Spawn> spawns = new List<Spawn>();
@@ -31,34 +27,41 @@ namespace ServerSim
             foreach(string line in lines)
             {
                 string[] parameters = line.Split(" ");
-                switch (parameters[0])
+                if (parameters[0] == "")
+                    break;
+                switch (int.Parse(parameters[0]))
                 {
-                    case "0":
+                    case (int)MapGenerator.ObjectType.wall:
                         walls.Add(new Wall(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), StringToFloat(parameters[3]), StringToFloat(parameters[4])));
                         break;
-                    case "1":
+                    case (int)MapGenerator.ObjectType.floor:
                         floors.Add(new Floor(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), StringToFloat(parameters[3]), StringToFloat(parameters[4]), StringToFloat(parameters[5])));
                         break;
-                    case "2":
+                    case (int)MapGenerator.ObjectType.ladder:
                         ladders.Add(new Ladder(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), StringToFloat(parameters[3]), StringToFloat(parameters[4])));
                         break;
-                    case "3":
-                        spawns.Add(new Spawn(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), 0));
+                    case (int)MapGenerator.ObjectType.spawn:
+                        spawns.Add(new Spawn(new Vector2(StringToFloat(parameters[1]), StringToFloat(parameters[2])), int.Parse(parameters[3])));
                         break;
                 }
             }
-            maps.Add(new Map(0, spawns, npcs, ladders, floors, spawns[0].pos,walls));
+            maps.Add(new Map(0, spawns, npcs, ladders, floors, new Vector2(-33, -11), walls));
         }
         public static void LoadMonsterData(string fileLoc)
         {
-
+            string[] lines = File.ReadAllText(MONSTERLOC).Split(Environment.NewLine);
+            foreach (string line in lines)
+            {
+                string[] parameters = line.Split(" ");
+                monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero,StringToFloat(parameters[1]), StringToFloat(parameters[2]),0), int.Parse(parameters[3]), int.Parse(parameters[4])));
+            }
         }
         public static Monster getMonster(int monsterID)
         {
             if (monsters.Count == 0)
                 LoadMonsterData(MONSTERLOC);
             foreach (Monster mon in monsters)
-                if (mon.getID() == monsterID)
+                if (mon.getMonsterType() == monsterID)
                     return mon.Clone();
             return null;
         }

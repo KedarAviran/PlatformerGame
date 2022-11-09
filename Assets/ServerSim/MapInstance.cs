@@ -20,8 +20,9 @@ namespace ServerSim
         public MapInstance(int mapID)
         {
             players = new List<Player>();
+            monsters = new List<Monster>();
             map = DataHolder.getMap(mapID);
-            //createMonsters(map.getSpawns());
+            createMonsters(map.getSpawns());
             time = DateTime.UtcNow;
             Thread thread = new Thread(new ThreadStart(Update));
             thread.Start();
@@ -30,10 +31,11 @@ namespace ServerSim
         {
             foreach(Spawn spawn in spawns)
             {
-                Monster mon = DataHolder.getMonster(spawn.figureID);
+                Monster mon = DataHolder.getMonster(spawn.figureType);
                 mon.setID(++figureIDCounter);
-                mon.updatePosition(spawn.pos);
                 monsters.Add(mon);
+                ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, mon.getPos(), (int)MsgCoder.Figures.monster));
+                mon.updatePosition(spawn.pos);
             }
         }
         public Player getPlayerByID(int figureID)
@@ -48,7 +50,7 @@ namespace ServerSim
             Player player = new Player(map.getSpawnPoint());
             player.setID(++figureIDCounter);
             players.Add(player);
-            ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, player.getPos()));
+            ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, player.getPos(),(int)MsgCoder.Figures.player));
         }
         public void movePlayer(int figureID , int dir)
         {
@@ -136,6 +138,15 @@ namespace ServerSim
                     checkFigureOnAir(player);
                 }
                 player.sendUpdateToClient();
+            }
+            foreach (Monster mon in monsters)
+            {
+                if (mon.getOnAir())
+                {
+                    mon.applyGravity(delta);
+                    checkFigureOnAir(mon);
+                }
+                mon.sendUpdateToClient();
             }
         }
     }

@@ -8,11 +8,11 @@ namespace ServerSim
     public struct Spawn
     {
         public Vector2 pos;
-        public int figureID;
-        public Spawn(Vector2 pos, int figureID)
+        public int figureType;
+        public Spawn(Vector2 pos, int figureType)
         {
             this.pos = pos;
-            this.figureID = figureID;
+            this.figureType = figureType;
         }
     }
     class Map

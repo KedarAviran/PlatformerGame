@@ -11,9 +11,19 @@ namespace ServerSim
         bool patrolActive = false;
         private bool patrolSide = true;  //true = right false = left
         private float moveSpeed = 0.5f;
-        public Monster(Colider2D colider)
+        private float damage;
+        private float lifePoints;
+        private int monsterType;
+        public Monster(int monsterType ,Colider2D colider, float damage , float lifePoints)
         {
+            this.monsterType = monsterType;
             this.colider = colider;
+            this.damage = damage;
+            this.lifePoints = lifePoints;
+        }
+        public int getMonsterType()
+        {
+            return monsterType;
         }
         public void patrol()
         {
