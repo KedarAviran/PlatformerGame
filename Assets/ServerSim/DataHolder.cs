@@ -10,8 +10,10 @@ namespace ServerSim
     {
         const string MAPLOC = "map.txt";
         const string MONSTERLOC = "monsters.txt";
+        const string SKILLSLOC = "skills.txt";
         private static List<Map> maps = new List<Map>();
         private static List<Monster> monsters = new List<Monster>();
+        private static List<Skill> skills = new List<Skill>();
         public static float StringToFloat(string num)
         {
             return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
@@ -23,7 +25,7 @@ namespace ServerSim
             List<Spawn> spawns = new List<Spawn>();
             List<Wall> walls = new List<Wall>();
             List<NPC> npcs = new List<NPC>();
-            string[] lines = File.ReadAllText(MAPLOC).Split(Environment.NewLine);
+            string[] lines = File.ReadAllText(fileLoc).Split(Environment.NewLine);
             foreach(string line in lines)
             {
                 string[] parameters = line.Split(" ");
@@ -49,12 +51,25 @@ namespace ServerSim
         }
         public static void LoadMonsterData(string fileLoc)
         {
-            string[] lines = File.ReadAllText(MONSTERLOC).Split(Environment.NewLine);
+            string[] lines = File.ReadAllText(fileLoc).Split(Environment.NewLine);
             foreach (string line in lines)
             {
                 string[] parameters = line.Split(" ");
                 monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero,StringToFloat(parameters[1]), StringToFloat(parameters[2]),0), int.Parse(parameters[3]), int.Parse(parameters[4])));
             }
+        }
+        public static void LoadSkillsData(string fileLoc)
+        {
+
+        }
+        public static Skill getSkill(int skillID)
+        {
+            if (skills.Count == 0)
+                LoadSkillsData(SKILLSLOC);
+            foreach (Skill skill in skills)
+                if (skill.getID() == skillID)
+                    return skill;
+            return null;
         }
         public static Monster getMonster(int monsterID)
         {

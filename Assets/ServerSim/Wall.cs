@@ -8,6 +8,7 @@ namespace ServerSim
     class Wall
     {
         private Colider2D colider;
+        List<int> figures = new List<int>();
         public Wall(Vector2 pos, float width, float height)
         {
             colider = new Colider2D(pos, width, height,0);
@@ -16,9 +17,16 @@ namespace ServerSim
         {
             return colider;
         }
-        public bool isColiding(Colider2D figure)
+        public bool isColiding(Figure figure)
         {
-            return (colider.isParallelColiding(figure) && colider.getBotRight().Y < figure.getBotRight().Y);
+            if (colider.isParallelColiding(figure.GetColider2D()) && colider.getBotRight().Y > figure.GetColider2D().getBotRight().Y)
+                figures.Add(figure.getID());
+            else
+            if (figures.Contains(figure.getID()))
+                figures.Remove(figure.getID());
+            if (colider.isParallelColiding(figure.GetColider2D()) && colider.getBotRight().Y < figure.GetColider2D().getBotRight().Y && !figures.Contains(figure.getID()))
+                return true;
+            return false;
         }
     }
 }

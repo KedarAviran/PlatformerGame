@@ -49,12 +49,12 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
-        public static byte[] skillRequest(int skillID , int side)
+        public static byte[] skillRequest(int skillID , Direction dir)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ClientToServer.useSkill);
             buffer.writeInteger(skillID);
-            buffer.writeInteger(side);
+            buffer.writeInteger((int)dir);
             byte[] array = buffer.ToArray();
             buffer.Dispose();
             return array;
@@ -126,6 +126,25 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
+        public static byte[] newLifeOfFigureOrder(int figureID, float life)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.writeInteger((int)ServerToClient.newLifeOfFigure);
+            buffer.writeInteger(figureID);
+            buffer.writeFloat(life);
+            byte[] array = buffer.ToArray();
+            buffer.Dispose();
+            return array;
+        }
+        private static DataContainer fillnewLifeOfFigureOrder(ByteBuffer buffer)
+        {
+            DataContainer container = new DataContainer();
+            container.requestType = (int)ServerToClient.newLifeOfFigure;
+            container.integers.Add(buffer.readInteger());
+            container.floats.Add(buffer.readFloat());
+            buffer.Dispose();
+            return container;
+        }
         public static DataContainer getDataContainerClient(byte[] data)
         {
             ByteBuffer buffer = new ByteBuffer();
@@ -138,7 +157,7 @@ namespace MidProject
                 case (int)ServerToClient.FigureSkill:
                     return null;
                 case (int)ServerToClient.newLifeOfFigure:
-                    return null;
+                    return fillnewLifeOfFigureOrder(buffer);
                 case (int)ServerToClient.newFigure:
                     return fillNewFigureOrder(buffer);
 

@@ -94,6 +94,8 @@ namespace ServerSim
                 {
                     figure.setOnAir(false);
                     figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y) + DISTANCEFROMGROUND));
+                    if (figure is Monster)
+                        ((Monster)figure).setPatrolLimit(floor.GetColider2D().getTopLeft().X, floor.GetColider2D().getTopRight().X);
                     return;
                 }
             figure.setOnAir(true);  
@@ -101,7 +103,7 @@ namespace ServerSim
         private bool wallCheck(Figure figure)
         {
             foreach (Wall wall in map.GetWalls())
-                if (wall.isColiding(figure.GetColider2D()))
+                if (wall.isColiding(figure))
                 {
                     float wallLeftX = wall.GetColider2D().getBotLeft().X;
                     float wallRightX = wall.GetColider2D().getBotRight().X;
@@ -146,6 +148,7 @@ namespace ServerSim
                     mon.applyGravity(delta);
                     checkFigureOnAir(mon);
                 }
+                mon.patrol();
                 mon.sendUpdateToClient();
             }
         }

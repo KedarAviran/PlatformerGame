@@ -14,7 +14,10 @@ namespace ServerSim
         {
             colider = new Colider2D(pos, width, height, angle);
         }
-
+        public Colider2D GetColider2D()
+        {
+            return colider;
+        }
         public float getYofFloor()
         {
             return colider.getTopRight().Y;

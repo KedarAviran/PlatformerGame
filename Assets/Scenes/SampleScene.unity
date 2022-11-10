@@ -425,7 +425,7 @@ MonoBehaviour:
   ladder: {fileID: 1823351791415240887, guid: 5bc0467a8bb74bd4e988d6c4b524ef0a, type: 3}
   wall: {fileID: 4290486588488482584, guid: 5b1cbef62af16704b8cdaca275f8d052, type: 3}
   GenerateMap: 0
-  LoadFromServer: 1
+  LoadFromServer: 0
 --- !u!4 &178140999
 Transform:
   m_ObjectHideFlags: 0
