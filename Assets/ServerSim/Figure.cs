@@ -13,8 +13,8 @@ namespace ServerSim
         protected Colider2D colider;
         protected int figureID;
         protected Vector2 pos = Vector2.Zero;
-        protected float damage;
-        protected float lifePoints;
+        protected float damage = 5;
+        protected float lifePoints = 100;
         private float jumpVelocity = 0.5f;
         private float baseGravityFactor = -1f; // unit per sec
         private float verticalVelocity = 0;
@@ -93,6 +93,10 @@ namespace ServerSim
         {
             lifePoints -= dmg;
             ComSim.instance.receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints));
+        }
+        public float getDamage()
+        {
+            return damage;
         }
         public void setOnAir(bool onAir)
         {

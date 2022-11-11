@@ -14,11 +14,11 @@ namespace ServerSim
         private static List<Map> maps = new List<Map>();
         private static List<Monster> monsters = new List<Monster>();
         private static List<Skill> skills = new List<Skill>();
-        public static float StringToFloat(string num)
+        private static float StringToFloat(string num)
         {
             return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
         }
-        public static void LoadMapData(string fileLoc)
+        private static void LoadMapData(string fileLoc)
         {
             List<Floor> floors = new List<Floor>();
             List<Ladder> ladders = new List<Ladder>();
@@ -26,7 +26,7 @@ namespace ServerSim
             List<Wall> walls = new List<Wall>();
             List<NPC> npcs = new List<NPC>();
             string[] lines = File.ReadAllText(fileLoc).Split(Environment.NewLine);
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
                 string[] parameters = line.Split(" ");
                 if (parameters[0] == "")
@@ -49,18 +49,23 @@ namespace ServerSim
             }
             maps.Add(new Map(0, spawns, npcs, ladders, floors, new Vector2(-33, -11), walls));
         }
-        public static void LoadMonsterData(string fileLoc)
+        private static void LoadMonsterData(string fileLoc)
         {
             string[] lines = File.ReadAllText(fileLoc).Split(Environment.NewLine);
             foreach (string line in lines)
             {
                 string[] parameters = line.Split(" ");
-                monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero,StringToFloat(parameters[1]), StringToFloat(parameters[2]),0), int.Parse(parameters[3]), int.Parse(parameters[4])));
+                monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero, StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0), int.Parse(parameters[3]), int.Parse(parameters[4])));
             }
         }
-        public static void LoadSkillsData(string fileLoc)
+        private static void LoadSkillsData(string fileLoc)
         {
-
+            string[] lines = File.ReadAllText(fileLoc).Split(Environment.NewLine);
+            foreach (string line in lines)
+            {
+                string[] parameters = line.Split(" ");
+                skills.Add(new Skill(int.Parse(parameters[0]), new Colider2D(Vector2.Zero, StringToFloat(parameters[1]), StringToFloat(parameters[2]), StringToFloat(parameters[3])), new Vector2(StringToFloat(parameters[4]), StringToFloat(parameters[5])), StringToFloat(parameters[6]), StringToFloat(parameters[7])));
+            }
         }
         public static Skill getSkill(int skillID)
         {
@@ -89,5 +94,6 @@ namespace ServerSim
                     return map;
             return null;
         }
+
     }
 }

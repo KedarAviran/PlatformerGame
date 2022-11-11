@@ -7,15 +7,57 @@ namespace ServerSim
 {
     class Player : Figure
     {
+        private struct SkillCD
+        {
+            public int skillID;
+            public double lastUse;
+            public SkillCD(int skillID, double lastUse)
+            {
+                this.skillID = skillID;
+                this.lastUse = lastUse;
+            }
+        }
         private int level;
-        private int lifePoints;
         private List<int> skills = new List<int>();
-        private float invulnerableDuration = 0.5f;
+        private List<SkillCD> skillCDs = new List<SkillCD>();
+        private float invulnerableDuration = 1;
         private DateTime invulnerableTime = DateTime.UtcNow;
+        
         public Player(Vector2 pos)
         {
             colider = new Colider2D(pos, 5, 5, 0);
             this.pos = pos;
+        }
+        private double getLastUseByID(int skillID)
+        {
+            foreach (SkillCD cd in skillCDs)
+                if (cd.skillID == skillID)
+                    return cd.lastUse;
+            SkillCD skill = new SkillCD(skillID, DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds);
+            skillCDs.Add(skill);
+            return DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds;
+        }
+        private void removeSkillCD(int skillID)
+        {
+            SkillCD current= skillCDs[0];
+            foreach (SkillCD cd in skillCDs)
+                if (cd.skillID == skillID)
+                    current=cd;
+            if (skillCDs.Contains(current))
+                skillCDs.Remove(current);
+        }
+        public void setSkillLastUse(int skillID)
+        {
+            getLastUseByID(skillID);
+            removeSkillCD(skillID);
+            skillCDs.Add(new SkillCD(skillID, DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds));
+        }
+        public bool isSkillOnCD(int skillID)
+        {
+            Skill skill = DataHolder.getSkill(skillID);
+            if (DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds - getLastUseByID(skillID) < skill.getCooldown())
+                return true;
+            return false;
         }
         public bool isInvulnerable()
         {

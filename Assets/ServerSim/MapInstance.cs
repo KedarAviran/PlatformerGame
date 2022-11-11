@@ -33,9 +33,9 @@ namespace ServerSim
             {
                 Monster mon = DataHolder.getMonster(spawn.figureType);
                 mon.setID(++figureIDCounter);
+                mon.updatePosition(spawn.pos);
                 monsters.Add(mon);
                 ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, mon.getPos(), (int)MsgCoder.Figures.monster));
-                mon.updatePosition(spawn.pos);
             }
         }
         public Player getPlayerByID(int figureID)
@@ -52,22 +52,22 @@ namespace ServerSim
             players.Add(player);
             ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, player.getPos(),(int)MsgCoder.Figures.player));
         }
-        public void movePlayer(int figureID , int dir)
+        public void moveFigure(int figureID , int dir)
         {
-            Player player = getPlayerByID(figureID);
+            Figure figure = getPlayerByID(figureID);
             if (dir != (int)MsgCoder.Direction.Up && dir != (int)MsgCoder.Direction.Down)
             {
-                player.move(dir);
-                checkFigureOnAir(player);
-                wallCheck(player);
+                figure.move(dir);
+                checkFigureOnAir(figure);
+                wallCheck(figure);
             }
             else
             {
                 if (isOnLadder(figureID))
                 {
                     clearFloors(figureID);
-                    player.setOnAir(false);
-                    player.move(dir);
+                    figure.setOnAir(false);
+                    figure.move(dir);
                 }
             }
                 
@@ -92,8 +92,9 @@ namespace ServerSim
             foreach (Floor floor in map.getFloors())
                 if (floor.checkFigureColision(figure))
                 {
+                    if (figure.getOnAir())
+                        figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y) + DISTANCEFROMGROUND));
                     figure.setOnAir(false);
-                    figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y) + DISTANCEFROMGROUND));
                     if (figure is Monster)
                         ((Monster)figure).setPatrolLimit(floor.GetColider2D().getTopLeft().X, floor.GetColider2D().getTopRight().X);
                     return;
@@ -117,6 +118,22 @@ namespace ServerSim
                 } 
             return false;
         }
+        public void playerUseSkill(int playerID,int skillID,int dir)
+        {
+            Player player = getPlayerByID(playerID);
+            Skill skill = DataHolder.getSkill(skillID);
+            if (player.isSkillOnCD(skillID))
+                return;
+            player.setSkillLastUse(skillID);
+            Colider2D skillColider = skill.GetColider2D();
+            if (dir == (int)MsgCoder.Direction.Right)
+                skillColider.updateColider(player.getPos() + skill.getReletivePos());
+            else
+                skillColider.updateColider(player.getPos() + new Vector2(-1 * skill.getReletivePos().X, skill.getReletivePos().Y));
+            foreach (Monster mon in monsters)
+                if (mon.GetColider2D().isParallelColiding(skillColider))
+                    mon.gotAttacked(skill.getDamage(),player);
+        }
         public void Update()
         {
             TimeSpan delta;
@@ -134,21 +151,22 @@ namespace ServerSim
         {
             foreach (Player player in players)
             {
+                foreach (Monster mon in monsters)
+                    if (player.GetColider2D().isParallelColiding(mon.GetColider2D()))
+                        player.gotAttacked(mon.getDamage());
                 if (player.getOnAir())
-                {
                     player.applyGravity(delta);
-                    checkFigureOnAir(player);
-                }
+                checkFigureOnAir(player);
                 player.sendUpdateToClient();
             }
             foreach (Monster mon in monsters)
             {
-                if (mon.getOnAir())
-                {
-                    mon.applyGravity(delta);
-                    checkFigureOnAir(mon);
-                }
                 mon.patrol();
+                mon.aggroMove();
+                if (mon.getOnAir())
+                    mon.applyGravity(delta);
+                wallCheck(mon);
+                checkFigureOnAir(mon);
                 mon.sendUpdateToClient();
             }
         }

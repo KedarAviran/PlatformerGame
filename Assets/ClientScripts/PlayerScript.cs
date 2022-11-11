@@ -24,8 +24,8 @@ public class PlayerScript : MonoBehaviour
             ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Up));
         if (Input.GetKey(KeyCode.DownArrow))
             ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Down));
+        if (Input.GetKey(KeyCode.C))
+            ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Right));
         Camera.main.transform.position = transform.position - new Vector3(0,0,10);
-
-
     }
 }

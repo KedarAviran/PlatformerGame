@@ -9,7 +9,7 @@ namespace MidProject
         public enum ClientToServer
         {
             moveRequest,
-            useSkill
+            SkillRequest
         }
         public enum ServerToClient
         {
@@ -52,7 +52,7 @@ namespace MidProject
         public static byte[] skillRequest(int skillID , Direction dir)
         {
             ByteBuffer buffer = new ByteBuffer();
-            buffer.writeInteger((int)ClientToServer.useSkill);
+            buffer.writeInteger((int)ClientToServer.SkillRequest);
             buffer.writeInteger(skillID);
             buffer.writeInteger((int)dir);
             byte[] array = buffer.ToArray();
@@ -62,7 +62,7 @@ namespace MidProject
         private static DataContainer fillSkillRequest(ByteBuffer buffer)
         {
             DataContainer container = new DataContainer();
-            container.requestType = (int)ClientToServer.useSkill;
+            container.requestType = (int)ClientToServer.SkillRequest;
             container.integers.Add(buffer.readInteger());
             container.integers.Add(buffer.readInteger());
             buffer.Dispose();
@@ -77,7 +77,7 @@ namespace MidProject
             {
                 case (int)ClientToServer.moveRequest:
                     return fillMoveRequest(buffer);
-                case (int)ClientToServer.useSkill:
+                case (int)ClientToServer.SkillRequest:
                     return fillSkillRequest(buffer);
             }
             return null;

@@ -9,8 +9,9 @@ namespace ServerSim
     class Monster : Figure
     {
         private const float TARGETDISTANCE = 0.2f;
-        private const float STAGGERDURATION = 0.4f;
+        private const float STAGGERDURATION = 1f;
         private Player aggroPlayer;
+        bool isAggro = false;
         private DateTime idleTime = DateTime.UtcNow;
         private float idleDuration =0;
         private int minIdleTime = 0;
@@ -21,7 +22,6 @@ namespace ServerSim
         private float patrolMinX;
         private float patrolMaxX;
         private float jumpPatrolChance = 0.005f;
-        private float moveSpeed = 0.2f;
         private int monsterType;
         public Monster(int monsterType ,Colider2D colider, float damage , float lifePoints)
         {
@@ -47,6 +47,7 @@ namespace ServerSim
         public void setAggroPlayer(Player player)
         {
             this.aggroPlayer = player;
+            isAggro = true;
         }
         private void setNewPatrolTarget(Random rnd)
         {
@@ -73,6 +74,8 @@ namespace ServerSim
         public void patrol()
         {
             Random rnd = new Random();
+            if (isAggro)
+                return;
             if (!patrolActive)
                 return;
             if (!checkIdleTimer())
@@ -88,14 +91,28 @@ namespace ServerSim
             else
                 move((int)MsgCoder.Direction.Left);
         }
-        public void gotAttacked(float dmg)
+        public void gotAttacked(float dmg,Player player)
         {
             base.gotHit(dmg);
             goIdle(STAGGERDURATION);
+            setAggroPlayer(player);
+        }
+        public void aggroMove()
+        {
+            Random rnd = new Random();
+            if (!isAggro)
+                return;
+            if (aggroPlayer.getPos().X > getPos().X)
+                move((int)MsgCoder.Direction.Right);
+            if (aggroPlayer.getPos().X < getPos().X)
+                move((int)MsgCoder.Direction.Left);
+            if ((float)rnd.NextDouble() > (1 - jumpPatrolChance))
+                move((int)MsgCoder.Direction.Jump);
+
         }
         public Monster Clone()
         {
-            return this;
+            return new Monster(monsterType, colider.Clone(), damage, lifePoints);
         }
     }
 }

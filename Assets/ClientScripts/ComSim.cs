@@ -12,10 +12,12 @@ public class ComSim : MonoBehaviour
     {
         public int figureID;
         public GameObject gameObjectReference;
-        public Figure(int figureID, GameObject reference)
+        public float lifePoints;
+        public Figure(int figureID, GameObject reference , float lifePoints)
         {
             this.figureID = figureID;
             this.gameObjectReference = reference;
+            this.lifePoints = lifePoints;
         }
         
     }
@@ -25,6 +27,7 @@ public class ComSim : MonoBehaviour
     public GameObject monsterPrefab;
     public GameObject playerGameObject;
     private GameObject player;
+    private int playerID;
     
     void Start()
     {
@@ -51,8 +54,8 @@ public class ComSim : MonoBehaviour
             case (int)MsgCoder.ClientToServer.moveRequest:
                 handleMoveRequest(cont);
                 break;
-            case (int)MsgCoder.ClientToServer.useSkill:
-                handleUseSkill(cont);
+            case (int)MsgCoder.ClientToServer.SkillRequest:
+                handleSkillRequest(cont);
                 break;
         }
     }
@@ -64,17 +67,22 @@ public class ComSim : MonoBehaviour
     // SERVER
     private void handleMoveRequest(DataContainer data)
     {
-        map.movePlayer(2, data.integers[0]);
+        map.moveFigure(playerID, data.integers[0]);
     }
-    private void handleUseSkill(DataContainer data)
+    private void handleSkillRequest(DataContainer data)
     {
-
+        map.playerUseSkill(playerID, data.integers[0], data.integers[1]);
     }
     // CLIENT
     
     private void handleNewLifeOfFigure(DataContainer data)
     {
-
+        Figure figure = getFigureByID(data.integers[0]);
+        //log("Figure " + data.integers[0] + "New life is " + data.floats[0]);
+        log("got hit");
+        figure.lifePoints = data.floats[0];
+        if (figure.lifePoints <= 0)
+            figure.gameObjectReference.SetActive(false);
     }
     private void handleFigureSkill(DataContainer data)
     {
@@ -83,6 +91,7 @@ public class ComSim : MonoBehaviour
     private void handleNewLocationOfFigure(DataContainer data) 
     {
         Figure figure = getFigureByID(data.integers[0]);
+        log("new loc fig: " + data.integers[0]);
         if (figure.gameObjectReference != null)
             figure.gameObjectReference.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
     }
@@ -95,13 +104,14 @@ public class ComSim : MonoBehaviour
                 player = Instantiate(playerGameObject);
                 player.name = "Player ID: " + figureID;
                 player.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
-                figures.Add(new Figure(figureID, player));
+                playerID = figureID;
+                figures.Add(new Figure(figureID, player,100));
                 break;
             case (int)MsgCoder.Figures.monster:
                 GameObject monster = Instantiate(monsterPrefab);
                 monster.name = "monster ID: " + figureID;
                 monster.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
-                figures.Add(new Figure(figureID, monster));
+                figures.Add(new Figure(figureID, monster,100));
                 break;
         }
         
@@ -130,6 +140,7 @@ public class ComSim : MonoBehaviour
                     handleNewFigure(cont);
                     break;
             }
+            
         }
     }
     public void Update()
