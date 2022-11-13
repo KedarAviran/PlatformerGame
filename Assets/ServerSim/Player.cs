@@ -17,7 +17,6 @@ namespace ServerSim
                 this.lastUse = lastUse;
             }
         }
-        private int level;
         private List<int> skills = new List<int>();
         private List<SkillCD> skillCDs = new List<SkillCD>();
         private float invulnerableDuration = 1;

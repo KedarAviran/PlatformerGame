@@ -4,6 +4,7 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
+  - monsterPrefab: {fileID: 1289794116045288078, guid: c8e22eea86dc74c46bcfadb66f489db1, type: 3}
   - playerGameObject: {fileID: 4050415082086107995, guid: 47df107e748bef348acd7344fcbe0056, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}

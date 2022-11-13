@@ -8,12 +8,11 @@ using ServerSim;
 public class MapGenerator : MonoBehaviour
 {
     const string MAPFILENAME = "map.txt";
-    const string MONSTERSFILENAME = "map.txt";
-    public GameObject floor;
-    public GameObject ladder;
-    public GameObject wall;
-    public bool GenerateMap;
-    public bool LoadFromServer;
+    const string MONSTERSFILENAME = "monsters.txt";
+    [SerializeField]
+    public GameObject floor, ladder, wall;
+    [SerializeField]
+    public bool GenerateMap, GenerateMonsters, LoadFromServer;
     public enum ObjectType
     {
         wall,
@@ -30,18 +29,24 @@ public class MapGenerator : MonoBehaviour
     {
         if (GenerateMap)
             generateMap();
+        if (GenerateMonsters)
+            generateMonsters();
     }
     public float StringToFloat(string num)
     {
         return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
     }
-    //public void generateMonsters()
-    //{
-    //    string monsters = "";
-    //    foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Monsters"))
-    //        monsters = monsters + obj.name + " " + obj.transform.localScale.x + " " + obj.transform.localScale.y + Environment.NewLine;
-    //    File.WriteAllText(MONSTERSFILENAME, monsters);
-    //}
+    public void generateMonsters()
+    {
+        string monsters = File.ReadAllText(MONSTERSFILENAME) + Environment.NewLine;
+        foreach (GameObject mon in GameObject.FindGameObjectsWithTag("Monster"))
+        {
+            FigureInfo info = mon.GetComponent<FigureInfo>();
+            SpriteRenderer renderer = mon.GetComponent<SpriteRenderer>();
+            monsters = monsters + info.figureType + " " + renderer.bounds.size.x + " " + renderer.bounds.size.y + " " + info.lifePoints + " " + info.moveSpeed + " " + info.damage + " " + info.jumpChance + Environment.NewLine;
+        } 
+        File.WriteAllText(MONSTERSFILENAME, monsters);
+    }
     public void loadMap()// FOR TESTING ONLY
     {
         string[] lines = File.ReadAllText(MAPFILENAME).Split(Environment.NewLine);

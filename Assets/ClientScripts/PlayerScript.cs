@@ -5,13 +5,6 @@ using MidProject;
 
 public class PlayerScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKey(KeyCode.RightArrow))
@@ -26,6 +19,6 @@ public class PlayerScript : MonoBehaviour
             ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Down));
         if (Input.GetKey(KeyCode.C))
             ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Right));
-        Camera.main.transform.position = transform.position - new Vector3(0,0,10);
+        Camera.main.transform.position = transform.position - new Vector3(0,-5,10);
     }
 }

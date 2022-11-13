@@ -23,12 +23,15 @@ namespace ServerSim
         private float patrolMaxX;
         private float jumpPatrolChance = 0.005f;
         private int monsterType;
-        public Monster(int monsterType ,Colider2D colider, float damage , float lifePoints)
+        public Monster(int monsterType ,Colider2D colider,float lifePoints,float moveSpeed, float damage,float jumpChance)
         {
             this.monsterType = monsterType;
             this.colider = colider;
-            this.damage = damage;
             this.lifePoints = lifePoints;
+            this.moveSpeed = moveSpeed;
+            this.jumpPatrolChance = jumpChance;
+            this.damage = damage;
+            
         }
         public int getMonsterType()
         {
@@ -112,7 +115,7 @@ namespace ServerSim
         }
         public Monster Clone()
         {
-            return new Monster(monsterType, colider.Clone(), damage, lifePoints);
+            return new Monster(monsterType, colider.Clone(), lifePoints, moveSpeed, damage, jumpPatrolChance);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ServerSim
         private static List<Skill> skills = new List<Skill>();
         private static float StringToFloat(string num)
         {
-            return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
+            return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
         }
         private static void LoadMapData(string fileLoc)
         {
@@ -55,7 +55,9 @@ namespace ServerSim
             foreach (string line in lines)
             {
                 string[] parameters = line.Split(" ");
-                monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero, StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0), int.Parse(parameters[3]), int.Parse(parameters[4])));
+                if (parameters[0] == "")
+                    break;
+                monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero, StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0), StringToFloat(parameters[3]), StringToFloat(parameters[4]), StringToFloat(parameters[5]), StringToFloat(parameters[6])));
             }
         }
         private static void LoadSkillsData(string fileLoc)
