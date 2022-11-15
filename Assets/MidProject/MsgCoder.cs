@@ -103,7 +103,7 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
-        public static byte[] newFigureOrder(int figureID, Vector2 pos , int figureKind , int figureType)
+        public static byte[] newFigureOrder(int figureID, int figureKind, int figureType, Vector2 pos)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ServerToClient.newFigure);

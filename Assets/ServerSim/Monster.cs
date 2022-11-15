@@ -9,7 +9,7 @@ namespace ServerSim
     class Monster : Figure
     {
         private const float TARGETDISTANCE = 0.2f;
-        private const float STAGGERDURATION = 1f;
+        private const float STAGGERDURATION = 0.5f;
         private Player aggroPlayer;
         bool isAggro = false;
         private DateTime idleTime = DateTime.UtcNow;
@@ -31,7 +31,6 @@ namespace ServerSim
             this.moveSpeed = moveSpeed;
             this.jumpPatrolChance = jumpChance;
             this.damage = damage;
-            
         }
         public int getMonsterType()
         {
@@ -104,6 +103,8 @@ namespace ServerSim
         {
             Random rnd = new Random();
             if (!isAggro)
+                return;
+            if (!checkIdleTimer())
                 return;
             if (aggroPlayer.getPos().X > getPos().X)
                 move((int)MsgCoder.Direction.Right);

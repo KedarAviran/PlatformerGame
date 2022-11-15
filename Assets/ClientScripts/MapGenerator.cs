@@ -4,15 +4,16 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using ServerSim;
+using MidProject;
 
 public class MapGenerator : MonoBehaviour
 {
     const string MAPFILENAME = "map.txt";
-    const string MONSTERSFILENAME = "monsters.txt";
+    const string FIGURESFILENAME = "figures.txt";
     [SerializeField]
     public GameObject floor, ladder, wall;
     [SerializeField]
-    public bool GenerateMap, GenerateMonsters, LoadFromServer;
+    public bool GenerateMap, GenerateFigures, LoadFromServer;
     public enum ObjectType
     {
         wall,
@@ -29,23 +30,30 @@ public class MapGenerator : MonoBehaviour
     {
         if (GenerateMap)
             generateMap();
-        if (GenerateMonsters)
-            generateMonsters();
+        if (GenerateFigures)
+            generateFigures();
     }
     public float StringToFloat(string num)
     {
         return float.Parse(num, System.Globalization.CultureInfo.InvariantCulture);
     }
-    public void generateMonsters()
+    public void generateFigures()
     {
-        string monsters = File.ReadAllText(MONSTERSFILENAME) + Environment.NewLine;
-        foreach (GameObject mon in GameObject.FindGameObjectsWithTag("Monster"))
+        string figures = "";
+        //string monsters = File.ReadAllText(FIGURESFILENAME) + Environment.NewLine;
+        foreach (GameObject fig in GameObject.FindGameObjectsWithTag("Figure"))
         {
-            FigureInfo info = mon.GetComponent<FigureInfo>();
-            SpriteRenderer renderer = mon.GetComponent<SpriteRenderer>();
-            monsters = monsters + info.figureType + " " + renderer.bounds.size.x + " " + renderer.bounds.size.y + " " + info.lifePoints + " " + info.moveSpeed + " " + info.damage + " " + info.jumpChance + Environment.NewLine;
+            FigureInfo info = fig.GetComponent<FigureInfo>();
+            SpriteRenderer renderer = fig.GetComponent<SpriteRenderer>();
+            if (info.isMonster)
+                figures = figures + (int)MsgCoder.Figures.monster + " ";
+            if (info.isNPC)
+                figures = figures + (int)MsgCoder.Figures.npc + " ";
+            if (info.isPlayer)
+                figures = figures + (int)MsgCoder.Figures.player + " ";
+            figures = figures + info.figureType + " " + renderer.bounds.size.x + " " + renderer.bounds.size.y + " " + info.lifePoints + " " + info.moveSpeed + " " + info.damage + " " + info.jumpChance + Environment.NewLine;
         } 
-        File.WriteAllText(MONSTERSFILENAME, monsters);
+        File.WriteAllText(FIGURESFILENAME, figures);
     }
     public void loadMap()// FOR TESTING ONLY
     {

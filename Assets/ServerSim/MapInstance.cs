@@ -35,7 +35,7 @@ namespace ServerSim
                 mon.setID(++figureIDCounter);
                 mon.updatePosition(spawn.pos);
                 monsters.Add(mon);
-                ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, mon.getPos(), (int)MsgCoder.Figures.monster ,mon.getMonsterType()));
+                ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.monster, mon.getMonsterType(), mon.getPos()));
             }
         }
         public Player getPlayerByID(int figureID)
@@ -47,10 +47,11 @@ namespace ServerSim
         }
         public void addPlayer()
         {
-            Player player = new Player(map.getSpawnPoint());
+            Player player = DataHolder.getPlayer(1);
+            player.updatePosition(map.getSpawnPoint());
             player.setID(++figureIDCounter);
             players.Add(player);
-            ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, player.getPos(),(int)MsgCoder.Figures.player,0));
+            ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.player, player.getPlayerType(), player.getPos()));
         }
         public void moveFigure(int figureID , int dir)
         {

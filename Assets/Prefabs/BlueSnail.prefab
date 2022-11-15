@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 7771220248038192481}
   - component: {fileID: 3644020082752276910}
   - component: {fileID: 2073705736549518744}
+  - component: {fileID: -4335779826720316080}
   m_Layer: 0
   m_Name: BlueSnail
-  m_TagString: Monster
+  m_TagString: Figure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,6 +104,9 @@ MonoBehaviour:
   lifePoints: 100
   moveSpeed: 0.1
   jumpChance: 0.005
+  isPlayer: 0
+  isMonster: 1
+  isNPC: 0
 --- !u!95 &2073705736549518744
 Animator:
   serializedVersion: 4
@@ -123,3 +127,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-4335779826720316080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5629341860247007294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b4ee5f051917c40a210e04c90777a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasJumpAnimation: 0
+  AdditionalEffect: 0
+  childController: {fileID: 0}

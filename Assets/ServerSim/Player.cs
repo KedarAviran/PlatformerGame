@@ -21,11 +21,22 @@ namespace ServerSim
         private List<SkillCD> skillCDs = new List<SkillCD>();
         private float invulnerableDuration = 1;
         private DateTime invulnerableTime = DateTime.UtcNow;
-        
-        public Player(Vector2 pos)
+        private int playerType;
+        public Player(int playerType, Colider2D colider, float lifePoints, float moveSpeed, float damage)
         {
-            colider = new Colider2D(pos, 5, 5, 0);
-            this.pos = pos;
+            this.colider = colider;
+            this.playerType = playerType;
+            this.lifePoints = lifePoints;
+            this.moveSpeed = moveSpeed;
+            this.damage = damage;
+        }
+        public Player Clone()
+        {
+            return new Player(playerType, colider.Clone(), lifePoints, moveSpeed, damage);
+        }
+        public int getPlayerType()
+        {
+            return playerType;
         }
         private double getLastUseByID(int skillID)
         {

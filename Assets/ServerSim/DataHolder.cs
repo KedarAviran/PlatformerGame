@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Text;
+using MidProject;
 
 namespace ServerSim
 {
     static class DataHolder
     {
         const string MAPLOC = "map.txt";
-        const string MONSTERLOC = "monsters.txt";
+        const string FIGURELOC = "figures.txt";
         const string SKILLSLOC = "skills.txt";
         private static List<Map> maps = new List<Map>();
-        private static List<Monster> monsters = new List<Monster>();
+        private static List<Figure> figures = new List<Figure>();
         private static List<Skill> skills = new List<Skill>();
         private static float StringToFloat(string num)
         {
@@ -49,7 +50,7 @@ namespace ServerSim
             }
             maps.Add(new Map(0, spawns, npcs, ladders, floors, new Vector2(-33, -11), walls));
         }
-        private static void LoadMonsterData(string fileLoc)
+        private static void LoadFiguresData(string fileLoc)
         {
             string[] lines = File.ReadAllText(fileLoc).Split(Environment.NewLine);
             foreach (string line in lines)
@@ -57,7 +58,17 @@ namespace ServerSim
                 string[] parameters = line.Split(" ");
                 if (parameters[0] == "")
                     break;
-                monsters.Add(new Monster(int.Parse(parameters[0]), new Colider2D(Vector2.Zero, StringToFloat(parameters[1]), StringToFloat(parameters[2]), 0), StringToFloat(parameters[3]), StringToFloat(parameters[4]), StringToFloat(parameters[5]), StringToFloat(parameters[6])));
+                switch (int.Parse(parameters[0]))
+                {
+                    case (int)MsgCoder.Figures.monster:
+                        figures.Add(new Monster(int.Parse(parameters[1]), new Colider2D(Vector2.Zero, StringToFloat(parameters[2]), StringToFloat(parameters[3]), 0), StringToFloat(parameters[4]), StringToFloat(parameters[5]), StringToFloat(parameters[6]), StringToFloat(parameters[7])));
+                        break;
+                    case (int)MsgCoder.Figures.player:
+                        figures.Add(new Player(int.Parse(parameters[1]), new Colider2D(Vector2.Zero, StringToFloat(parameters[2]), StringToFloat(parameters[3]), 0), StringToFloat(parameters[4]), StringToFloat(parameters[5]), StringToFloat(parameters[6])));
+                        break;
+                    case (int)MsgCoder.Figures.npc:
+                        break;
+                }
             }
         }
         private static void LoadSkillsData(string fileLoc)
@@ -78,13 +89,24 @@ namespace ServerSim
                     return skill;
             return null;
         }
+        public static Player getPlayer(int playerType)
+        {
+            if (figures.Count == 0)
+                LoadFiguresData(FIGURELOC);
+            foreach (Figure fig in figures)
+                if (fig is Player)
+                    if (((Player)fig).getPlayerType() == playerType)
+                        return ((Player)fig).Clone();
+            return null;
+        }
         public static Monster getMonster(int monsterID)
         {
-            if (monsters.Count == 0)
-                LoadMonsterData(MONSTERLOC);
-            foreach (Monster mon in monsters)
-                if (mon.getMonsterType() == monsterID)
-                    return mon.Clone();
+            if (figures.Count == 0)
+                LoadFiguresData(FIGURELOC);
+            foreach (Figure fig in figures)
+                if (fig is Monster)
+                    if (((Monster)fig).getMonsterType() == monsterID)
+                        return ((Monster)fig).Clone();
             return null;
         }
         public static Map getMap(int mapID)

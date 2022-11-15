@@ -8,4 +8,6 @@ public class FigureInfo : MonoBehaviour
     public int figureType;
     [SerializeField]
     public float damage,lifePoints, moveSpeed, jumpChance;
+    [SerializeField]
+    public bool isPlayer, isMonster, isNPC;
 }

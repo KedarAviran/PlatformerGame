@@ -9,6 +9,7 @@ TagManager:
   - Spawn
   - Wall
   - Monster
+  - Figure
   layers:
   - Default
   - TransparentFX
