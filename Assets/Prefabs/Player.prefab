@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4005872125812486123}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -80.7, y: -3.3, z: -2.0921085}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 7, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -103,7 +103,7 @@ MonoBehaviour:
   figureType: 1
   damage: 5
   lifePoints: 100
-  moveSpeed: 0.1
+  moveSpeed: 0.05
   jumpChance: 0.005
   isPlayer: 1
   isMonster: 0
@@ -153,5 +153,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasJumpAnimation: 1
-  AdditionalEffect: 0
-  childController: {fileID: 0}

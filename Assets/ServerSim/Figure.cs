@@ -16,7 +16,7 @@ namespace ServerSim
         protected float damage = 5;
         protected float lifePoints = 100;
         protected float jumpVelocity = 0.5f;
-        protected float baseGravityFactor = -1f; // unit per sec
+        protected float baseGravityFactor = -2f; // unit per sec
         protected float verticalVelocity = 0;
         protected float moveSpeed = 0.1f;
         protected float minVerticalVelocity = -5f;
