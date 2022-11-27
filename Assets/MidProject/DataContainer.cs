@@ -10,5 +10,6 @@ namespace MidProject
         public List<int> integers = new List<int>();
         public List<float> floats = new List<float>();
         public List<string> strings = new List<string>();
+        public List<bool> booleans = new List<bool>();
     }
 }

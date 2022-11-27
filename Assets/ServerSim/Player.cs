@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MidProject;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
@@ -22,6 +23,8 @@ namespace ServerSim
         private float invulnerableDuration = 1;
         private DateTime invulnerableTime = DateTime.UtcNow;
         private int playerType;
+        private bool onLadder = false;
+        private bool updateOnLadder = false;
         public Player(int playerType, Colider2D colider, float lifePoints, float moveSpeed, float damage)
         {
             this.colider = colider;
@@ -33,6 +36,16 @@ namespace ServerSim
         public Player Clone()
         {
             return new Player(playerType, colider.Clone(), lifePoints, moveSpeed, damage);
+        }
+        public bool getOnLadder()
+        {
+            return onLadder;
+        }
+        public void setOnLadder(bool onLadder)
+        {
+            if (this.onLadder != onLadder)
+                updateOnLadder = true;
+            this.onLadder = onLadder;
         }
         public int getPlayerType()
         {
@@ -84,6 +97,13 @@ namespace ServerSim
         {
             base.gotHit(dmg);
             invulnerableTime = DateTime.UtcNow;
+        }
+        public new void sendUpdateToClient()
+        {
+            base.sendUpdateToClient();
+            if (updateOnLadder)
+                ComSim.instance.receiveMsgClient(MsgCoder.onLadderOrder(figureID, onLadder));
+            updateOnLadder = false;
         }
     }
 }

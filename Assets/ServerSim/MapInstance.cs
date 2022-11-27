@@ -61,15 +61,20 @@ namespace ServerSim
                 figure.move(dir);
                 checkFigureOnAir(figure);
                 wallCheck(figure);
+                if (figure is Player)
+                    ((Player)figure).setOnLadder(false);
             }
             else
             {
                 if (isOnLadder(figureID))
                 {
                     clearFloors(figureID);
+                    ((Player)figure).setOnLadder(true);
                     figure.setOnAir(false);
                     figure.move(dir);
                 }
+                else
+                    ((Player)figure).setOnLadder(false);
             }
                 
         }
@@ -155,7 +160,7 @@ namespace ServerSim
                 foreach (Monster mon in monsters)
                     if (player.GetColider2D().isParallelColiding(mon.GetColider2D()))
                         player.gotAttacked(mon.getDamage());
-                if (player.getOnAir())
+                if (player.getOnAir()&& !player.getOnLadder())
                     player.applyGravity(delta);
                 checkFigureOnAir(player);
                 player.sendUpdateToClient();

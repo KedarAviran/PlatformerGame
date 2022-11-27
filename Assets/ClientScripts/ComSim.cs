@@ -113,6 +113,11 @@ public class ComSim : MonoBehaviour
                 break;
         }
     }
+    private void handleOnLadder(DataContainer data)
+    {
+        Figure figure = getFigureByID(data.integers[0]);
+        figure.gameObjectReference.GetComponent<AnimationController>().setOnLadder(data.booleans[0]);
+    }
     List<DataContainer> cmds = new List<DataContainer>();
     public void executeOrders()
     {
@@ -135,6 +140,9 @@ public class ComSim : MonoBehaviour
                     break;
                 case (int)MsgCoder.ServerToClient.newFigure:
                     handleNewFigure(cont);
+                    break;
+                case (int)MsgCoder.ServerToClient.onLadder:
+                    handleOnLadder(cont);
                     break;
             }
             

@@ -16,7 +16,8 @@ namespace MidProject
             newLocationOfFigure,
             FigureSkill,
             newLifeOfFigure,
-            newFigure
+            newFigure,
+            onLadder
         }
         public enum Direction
         {
@@ -147,6 +148,25 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
+        public static byte[] onLadderOrder(int figureID , bool onLadder)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.writeInteger((int)ServerToClient.onLadder);
+            buffer.writeInteger(figureID);
+            buffer.writeBool(onLadder);
+            byte[] array = buffer.ToArray();
+            buffer.Dispose();
+            return array;
+        }
+        private static DataContainer fillOnLadderOrder(ByteBuffer buffer)
+        {
+            DataContainer container = new DataContainer();
+            container.requestType = (int)ServerToClient.onLadder;
+            container.integers.Add(buffer.readInteger());
+            container.booleans.Add(buffer.readBool());
+            buffer.Dispose();
+            return container;
+        }
         public static DataContainer getDataContainerClient(byte[] data)
         {
             ByteBuffer buffer = new ByteBuffer();
@@ -162,7 +182,8 @@ namespace MidProject
                     return fillnewLifeOfFigureOrder(buffer);
                 case (int)ServerToClient.newFigure:
                     return fillNewFigureOrder(buffer);
-
+                case (int)ServerToClient.onLadder:
+                    return fillOnLadderOrder(buffer);
             }
             return null;
         }

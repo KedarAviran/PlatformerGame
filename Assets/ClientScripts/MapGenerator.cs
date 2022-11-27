@@ -52,7 +52,9 @@ public class MapGenerator : MonoBehaviour
             if (info.isPlayer)
                 figures = figures + (int)MsgCoder.Figures.player + " ";
             figures = figures + info.figureType + " " + renderer.bounds.size.x + " " + renderer.bounds.size.y + " " + info.lifePoints + " " + info.moveSpeed + " " + info.damage + " " + info.jumpChance + Environment.NewLine;
-        } 
+        }
+        if (File.Exists(FIGURESFILENAME))
+            File.Delete(FIGURESFILENAME);
         File.WriteAllText(FIGURESFILENAME, figures);
     }
     public void loadMap()// FOR TESTING ONLY
@@ -97,6 +99,8 @@ public class MapGenerator : MonoBehaviour
             map = map + (int)ObjectType.ladder + " " + obj.transform.position.x + " " + obj.transform.position.y + " " + obj.transform.localScale.x + " " + obj.transform.localScale.y+ Environment.NewLine;
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Spawn"))
             map = map + (int)ObjectType.spawn + " " + obj.transform.position.x + " " + obj.transform.position.y + " " + obj.name + Environment.NewLine;
+        if (File.Exists(MAPFILENAME))
+            File.Delete(MAPFILENAME);
         File.WriteAllText(MAPFILENAME, map);
     }
 }
