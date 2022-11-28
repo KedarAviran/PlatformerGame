@@ -8,7 +8,7 @@ namespace ServerSim
     class Ladder
     {
         Colider2D colider;
-        private const float DISTANCEFROMCENTER = 0.2f;
+        private const float DISTANCEFROMCENTER = 0.4f;
         public Ladder(Vector2 pos, float width, float height)
         {
             colider = new Colider2D(pos, width, height, 0);

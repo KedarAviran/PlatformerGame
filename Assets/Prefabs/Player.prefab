@@ -152,5 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b4ee5f051917c40a210e04c90777a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onLadder: 0
   hasJumpAnimation: 1
   hasLadderAnimation: 1

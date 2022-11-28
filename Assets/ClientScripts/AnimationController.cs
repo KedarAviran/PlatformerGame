@@ -7,7 +7,6 @@ public class AnimationController : MonoBehaviour
     private Animator anim;
     private SpriteRenderer spriteRen;
     private Vector3 lastPos;
-    [SerializeField]
     private bool onLadder = false;
     [SerializeField]
     bool hasJumpAnimation,hasLadderAnimation;
