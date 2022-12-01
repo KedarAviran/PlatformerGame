@@ -136,6 +136,7 @@ namespace ServerSim
                 skillColider.updateColider(player.getPos() + skill.getReletivePos());
             else
                 skillColider.updateColider(player.getPos() + new Vector2(-1 * skill.getReletivePos().X, skill.getReletivePos().Y));
+            ComSim.instance.receiveMsgClient(MsgCoder.figureSkillOrder(playerID, skillID, skillColider.getCenter()));
             foreach (Monster mon in monsters)
                 if (mon.GetColider2D().isParallelColiding(skillColider))
                     mon.gotAttacked(skill.getDamage(),player);

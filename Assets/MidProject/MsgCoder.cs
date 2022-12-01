@@ -167,6 +167,29 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
+        public static byte[] figureSkillOrder(int figureID, int skillID,Vector2 pos)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.writeInteger((int)ServerToClient.FigureSkill);
+            buffer.writeInteger(figureID);
+            buffer.writeInteger(skillID);
+            buffer.writeFloat(pos.X);
+            buffer.writeFloat(pos.Y);
+            byte[] array = buffer.ToArray();
+            buffer.Dispose();
+            return array;
+        }
+        private static DataContainer fillFigureSkillOrder(ByteBuffer buffer)
+        {
+            DataContainer container = new DataContainer();
+            container.requestType = (int)ServerToClient.FigureSkill;
+            container.integers.Add(buffer.readInteger());
+            container.integers.Add(buffer.readInteger());
+            container.floats.Add(buffer.readFloat());
+            container.floats.Add(buffer.readFloat());
+            buffer.Dispose();
+            return container;
+        }
         public static DataContainer getDataContainerClient(byte[] data)
         {
             ByteBuffer buffer = new ByteBuffer();
@@ -177,7 +200,7 @@ namespace MidProject
                 case (int)ServerToClient.newLocationOfFigure:
                     return fillNewLocationOrder(buffer);
                 case (int)ServerToClient.FigureSkill:
-                    return null;
+                    return fillFigureSkillOrder(buffer);
                 case (int)ServerToClient.newLifeOfFigure:
                     return fillnewLifeOfFigureOrder(buffer);
                 case (int)ServerToClient.newFigure:

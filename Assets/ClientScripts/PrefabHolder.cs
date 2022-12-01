@@ -6,6 +6,8 @@ public class PrefabHolder : MonoBehaviour
 {
     [SerializeField]
     List<GameObject> figures = new List<GameObject>();
+    [SerializeField]
+    List<GameObject> skills = new List<GameObject>();
     public static PrefabHolder instance;
     public void Start()
     {
@@ -16,6 +18,13 @@ public class PrefabHolder : MonoBehaviour
         foreach (GameObject obj in figures)
             if (obj.GetComponent<FigureInfo>().figureType == figureType)
                 return obj;
+        return null;
+    }
+    public GameObject getSkillByID(int skillID)
+    {
+        foreach (GameObject skill in skills)
+            if (skill.GetComponent<SkillScript>().skillID == skillID)
+                return skill;
         return null;
     }
 }

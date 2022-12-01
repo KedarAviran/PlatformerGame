@@ -25,6 +25,10 @@ namespace ServerSim
             defaultPoints();
             calculatePoints();
         }
+        public Vector2 getCenter()
+        {
+            return new Vector2(center.X,center.Y);
+        }
         public Colider2D Clone()
         {
             return new Colider2D(center, width, height, angle);

@@ -84,7 +84,10 @@ public class ComSim : MonoBehaviour
     }
     private void handleFigureSkill(DataContainer data)
     {
-
+        Figure figure = getFigureByID(data.integers[0]);
+        figure.gameObjectReference.GetComponent<AnimationController>().setAnimation("Skill");
+        GameObject skill = Instantiate(PrefabHolder.instance.getSkillByID(data.integers[1]));
+        skill.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
     }
     private void handleNewLocationOfFigure(DataContainer data) 
     {

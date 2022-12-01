@@ -1097,6 +1097,8 @@ MonoBehaviour:
   - {fileID: 5629341860247007294, guid: 60a646742256f014ab3f5ea38d3ddda0, type: 3}
   - {fileID: 3815692223041703039, guid: 2d02ee86c096b8e4aa792683717da130, type: 3}
   - {fileID: 4005872125812486123, guid: 47df107e748bef348acd7344fcbe0056, type: 3}
+  skills:
+  - {fileID: 3633926889260036380, guid: d76beaaf4520f1941925fc27ab844b45, type: 3}
 --- !u!1 &410380349
 GameObject:
   m_ObjectHideFlags: 0
