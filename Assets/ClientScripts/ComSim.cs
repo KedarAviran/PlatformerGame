@@ -155,6 +155,10 @@ public class ComSim : MonoBehaviour
     {
         executeOrders();
     }
+    public void OnApplicationQuit()
+    {
+        map.stopThread();
+    }
 
 
 }

@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 1289794116045288075}
   - component: {fileID: 1289794116045288076}
   - component: {fileID: 1289794116045288077}
-  - component: {fileID: 434919570}
   - component: {fileID: 8153032106040461972}
+  - component: {fileID: 8999639293739812184}
+  - component: {fileID: 6232960624620252267}
   m_Layer: 0
   m_Name: Snail
   m_TagString: Figure
@@ -107,7 +108,35 @@ MonoBehaviour:
   isPlayer: 0
   isMonster: 1
   isNPC: 0
---- !u!95 &434919570
+--- !u!114 &8153032106040461972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289794116045288078}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b4ee5f051917c40a210e04c90777a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasJumpAnimation: 0
+  hasLadderAnimation: 0
+--- !u!114 &8999639293739812184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1289794116045288078}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47815b2a7c575934dac22b4f641ccfa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasJumpAnimation: 0
+  hasLadderAnimation: 0
+--- !u!95 &6232960624620252267
 Animator:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -127,16 +156,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &8153032106040461972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1289794116045288078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1b4ee5f051917c40a210e04c90777a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hasJumpAnimation: 0

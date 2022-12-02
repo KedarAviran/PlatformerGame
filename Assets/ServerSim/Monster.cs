@@ -15,7 +15,7 @@ namespace ServerSim
         private DateTime idleTime = DateTime.UtcNow;
         private float idleDuration =0;
         private int minIdleTime = 0;
-        private int maxIdleTime = 2;
+        private int maxIdleTime = 5;
         bool patrolActive = false;
         private bool hasPatrolTarget = false;
         private float patrolTarget;

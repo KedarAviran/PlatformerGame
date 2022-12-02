@@ -17,6 +17,7 @@ namespace ServerSim
         Map map; // READ ONLY
         private const float DISTANCEFROMGROUND = 0f;
         private DateTime time;
+        Thread thread;
         public MapInstance(int mapID)
         {
             players = new List<Player>();
@@ -24,8 +25,12 @@ namespace ServerSim
             map = DataHolder.getMap(mapID);
             createMonsters(map.getSpawns());
             time = DateTime.UtcNow;
-            Thread thread = new Thread(new ThreadStart(Update));
+            thread = new Thread(new ThreadStart(Update));
             thread.Start();
+        }
+        public void stopThread()
+        {
+            thread.Abort();
         }
         public void createMonsters(List<Spawn> spawns)
         {

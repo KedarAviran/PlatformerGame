@@ -18,7 +18,10 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKey(KeyCode.DownArrow))
             ComSim.instance.receiveMsgServer(MsgCoder.moveRequest(MsgCoder.Direction.Down));
         if (Input.GetKey(KeyCode.C))
-            ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Right));
+            if (this.gameObject.GetComponent<SpriteRenderer>().flipX)
+                ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Right));
+            else
+                ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Left));
         Camera.main.transform.position = transform.position - new Vector3(0,-5,10);
     }
 }

@@ -7,7 +7,6 @@ namespace ServerSim
 {
     class Floor
     {
-        private const float COLIDEDISTANCE = 0.001f;
         private Colider2D colider;
         private List<int> figuresAbove = new List<int>();
         public Floor(Vector2 pos, float width, float height, float angle)
@@ -37,7 +36,7 @@ namespace ServerSim
                 if (getYofFloor() < figure.GetColider2D().getBotLeft().Y)
                     if (!figuresAbove.Contains(id))
                         figuresAbove.Add(id);
-                if (figuresAbove.Contains(id) && getYofFloor() > figure.GetColider2D().getBotLeft().Y)
+                if (figuresAbove.Contains(id) && getYofFloor() >= figure.GetColider2D().getBotLeft().Y)
                     return true;
             }
             else

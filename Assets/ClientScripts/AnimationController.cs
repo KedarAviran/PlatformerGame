@@ -23,7 +23,8 @@ public class AnimationController : MonoBehaviour
     void FixedUpdate()
     {
         bool movingInYAxis = Mathf.Abs(transform.position.y - lastPos.y) > 0.001f;
-        if (Mathf.Abs(transform.position.x - lastPos.x) > 0.001f)
+        bool movingInXAxis = Mathf.Abs(transform.position.x - lastPos.x) > 0.001f;
+        if (movingInXAxis)
         {
             if (transform.position.x > lastPos.x)
                 spriteRen.flipX = true;
@@ -33,7 +34,7 @@ public class AnimationController : MonoBehaviour
         if (hasLadderAnimation && onLadder)
             setAnimation("Ladder");
         else
-            if (transform.position == lastPos)
+            if (transform.position == lastPos && !anim.GetCurrentAnimatorStateInfo(0).IsName("Hit"))
             setAnimation("Idle");
         else
         if (hasJumpAnimation && movingInYAxis)
@@ -41,7 +42,7 @@ public class AnimationController : MonoBehaviour
         else
             setAnimation("Move");
         if (anim.GetCurrentAnimatorStateInfo(0).IsName("Ladder"))
-            anim.enabled = movingInYAxis;
+            anim.enabled = (movingInYAxis || movingInXAxis);
         else
             anim.enabled = true;
         lastPos = transform.position;
@@ -51,7 +52,6 @@ public class AnimationController : MonoBehaviour
         if (ani == "Hit" && (anim.GetCurrentAnimatorStateInfo(0).IsName("Ladder")))
             return;
         if (!(anim.GetCurrentAnimatorStateInfo(0).IsName("Hit") && ani == "Idle"))
-            if (!anim.GetCurrentAnimatorStateInfo(0).IsName(ani))
                 anim.SetTrigger(ani);
     }
 }
