@@ -30,6 +30,10 @@ namespace ServerSim
             updateColider();
             update = true;
         }
+        public float getLifePoints()
+        {
+            return lifePoints;
+        }
         public Vector2 getPos()
         {
             return new Vector2(pos.X, pos.Y);
@@ -92,7 +96,7 @@ namespace ServerSim
         protected void gotHit(float dmg)
         {
             lifePoints -= dmg;
-            ComSim.instance.receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints));
+            ComSim.instance.receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints,dmg));
         }
         public float getDamage()
         {

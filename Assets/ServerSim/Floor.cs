@@ -40,10 +40,8 @@ namespace ServerSim
                     return true;
             }
             else
-            {
                 if (figuresAbove.Contains(id))
-                    figuresAbove.Remove(id);
-            }
+                figuresAbove.Remove(id);
             return false;
         }
         public void removeFigure(int figureID)

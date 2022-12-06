@@ -17,7 +17,8 @@ namespace MidProject
             FigureSkill,
             newLifeOfFigure,
             newFigure,
-            onLadder
+            setBool,
+            setTrigger
         }
         public enum Direction
         {
@@ -129,12 +130,13 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
-        public static byte[] newLifeOfFigureOrder(int figureID, float life)
+        public static byte[] newLifeOfFigureOrder(int figureID, float life , float damageTaken)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ServerToClient.newLifeOfFigure);
             buffer.writeInteger(figureID);
             buffer.writeFloat(life);
+            buffer.writeFloat(damageTaken);
             byte[] array = buffer.ToArray();
             buffer.Dispose();
             return array;
@@ -145,25 +147,47 @@ namespace MidProject
             container.requestType = (int)ServerToClient.newLifeOfFigure;
             container.integers.Add(buffer.readInteger());
             container.floats.Add(buffer.readFloat());
+            container.floats.Add(buffer.readFloat());
             buffer.Dispose();
             return container;
         }
-        public static byte[] onLadderOrder(int figureID , bool onLadder)
+        public static byte[] setBoolOrder(int figureID, string order , bool onLadder)
         {
             ByteBuffer buffer = new ByteBuffer();
-            buffer.writeInteger((int)ServerToClient.onLadder);
+            buffer.writeInteger((int)ServerToClient.setBool);
             buffer.writeInteger(figureID);
+            buffer.writeString(order);
             buffer.writeBool(onLadder);
             byte[] array = buffer.ToArray();
             buffer.Dispose();
             return array;
         }
-        private static DataContainer fillOnLadderOrder(ByteBuffer buffer)
+        private static DataContainer fillSetBoolOrder(ByteBuffer buffer)
         {
             DataContainer container = new DataContainer();
-            container.requestType = (int)ServerToClient.onLadder;
+            container.requestType = (int)ServerToClient.setBool;
             container.integers.Add(buffer.readInteger());
+            container.strings.Add(buffer.readString());
             container.booleans.Add(buffer.readBool());
+            buffer.Dispose();
+            return container;
+        }
+        public static byte[] setTriggerOrder(int figureID, string trigger)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.writeInteger((int)ServerToClient.setTrigger);
+            buffer.writeInteger(figureID);
+            buffer.writeString(trigger);
+            byte[] array = buffer.ToArray();
+            buffer.Dispose();
+            return array;
+        }
+        private static DataContainer fillSetTriggerOrder(ByteBuffer buffer)
+        {
+            DataContainer container = new DataContainer();
+            container.requestType = (int)ServerToClient.setTrigger;
+            container.integers.Add(buffer.readInteger());
+            container.strings.Add(buffer.readString());
             buffer.Dispose();
             return container;
         }
@@ -205,8 +229,10 @@ namespace MidProject
                     return fillnewLifeOfFigureOrder(buffer);
                 case (int)ServerToClient.newFigure:
                     return fillNewFigureOrder(buffer);
-                case (int)ServerToClient.onLadder:
-                    return fillOnLadderOrder(buffer);
+                case (int)ServerToClient.setBool:
+                    return fillSetBoolOrder(buffer);
+                case (int)ServerToClient.setTrigger:
+                    return fillSetTriggerOrder(buffer);
             }
             return null;
         }

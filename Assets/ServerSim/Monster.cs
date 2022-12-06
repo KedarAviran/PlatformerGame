@@ -9,20 +9,23 @@ namespace ServerSim
     class Monster : Figure
     {
         private const float TARGETDISTANCE = 0.2f;
-        private const float STAGGERDURATION = 0.5f;
+        private const float STAGGERDURATION = 0.8f;
         private Player aggroPlayer;
-        bool isAggro = false;
+        private bool isAggro = false;
+        private bool patrolActive = false;
+        private bool hasPatrolTarget = false;
+        private bool isIdle = false;
+        private bool updateResume = false;
         private DateTime idleTime = DateTime.UtcNow;
-        private float idleDuration =0;
         private int minIdleTime = 0;
         private int maxIdleTime = 5;
-        bool patrolActive = false;
-        private bool hasPatrolTarget = false;
+        private int monsterType;
         private float patrolTarget;
         private float patrolMinX;
         private float patrolMaxX;
         private float jumpPatrolChance = 0.005f;
-        private int monsterType;
+        private float idleDuration = 0;
+
         public Monster(int monsterType ,Colider2D colider,float lifePoints,float moveSpeed, float damage,float jumpChance)
         {
             this.monsterType = monsterType;
@@ -60,7 +63,12 @@ namespace ServerSim
         {
             TimeSpan delta = DateTime.UtcNow - idleTime;
             if (delta.TotalSeconds > idleDuration)
+            {
+                if (isIdle)
+                    updateResume = true;
+                isIdle = false;
                 return true;
+            }
             return false;
         }
         private void goIdle(float duration)
@@ -97,6 +105,7 @@ namespace ServerSim
         {
             base.gotHit(dmg);
             goIdle(STAGGERDURATION);
+            isIdle = true;
             setAggroPlayer(player);
         }
         public void aggroMove()
@@ -113,6 +122,13 @@ namespace ServerSim
             if ((float)rnd.NextDouble() > (1 - jumpPatrolChance))
                 move((int)MsgCoder.Direction.Jump);
 
+        }
+        public new void sendUpdateToClient()
+        {
+            base.sendUpdateToClient();
+            if (updateResume)
+                ComSim.instance.receiveMsgClient(MsgCoder.setTriggerOrder(figureID, "Resume"));
+            updateResume = false;
         }
         public Monster Clone()
         {

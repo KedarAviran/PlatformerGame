@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using MidProject;
 
 namespace ServerSim
@@ -25,12 +26,7 @@ namespace ServerSim
             map = DataHolder.getMap(mapID);
             createMonsters(map.getSpawns());
             time = DateTime.UtcNow;
-            thread = new Thread(new ThreadStart(Update));
-            thread.Start();
-        }
-        public void stopThread()
-        {
-            thread.Abort();
+            Update();
         }
         public void createMonsters(List<Spawn> spawns)
         {
@@ -133,7 +129,7 @@ namespace ServerSim
         {
             Player player = getPlayerByID(playerID);
             Skill skill = DataHolder.getSkill(skillID);
-            if (player.isSkillOnCD(skillID))
+            if (player.isSkillOnCD(skillID) || player.getOnLadder())
                 return;
             player.setSkillLastUse(skillID);
             Colider2D skillColider = skill.GetColider2D();
@@ -142,22 +138,32 @@ namespace ServerSim
             else
                 skillColider.updateColider(player.getPos() + new Vector2(-1 * skill.getReletivePos().X, skill.getReletivePos().Y));
             ComSim.instance.receiveMsgClient(MsgCoder.figureSkillOrder(playerID, skillID, skillColider.getCenter()));
+            List<Monster> monsterToRemove = new List<Monster>();
             foreach (Monster mon in monsters)
                 if (mon.GetColider2D().isParallelColiding(skillColider))
-                    mon.gotAttacked(skill.getDamage(),player);
-        }
-        public void Update()
-        {
-            TimeSpan delta;
-            while (true)
-            {
-                delta = DateTime.UtcNow - time;
-                if (UPDATETIMER < delta.TotalSeconds)
                 {
-                    time = DateTime.UtcNow;
-                    UpdateInstance(delta);
+                    mon.gotAttacked(skill.getDamage(), player);
+                    if (mon.getLifePoints() <= 0)
+                        monsterToRemove.Add(mon);
                 }
-            }
+            foreach (Monster mon in monsterToRemove)
+                monsters.Remove(mon);
+        }
+        public async void Update()
+        {
+            await Task.Run(() =>
+            {
+                TimeSpan delta;
+                while (true)
+                {
+                    delta = DateTime.UtcNow - time;
+                    if (UPDATETIMER < delta.TotalSeconds)
+                    {
+                        time = DateTime.UtcNow;
+                        UpdateInstance(delta);
+                    }
+                }
+            });
         }
         public void UpdateInstance(TimeSpan delta)
         {

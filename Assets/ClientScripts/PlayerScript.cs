@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MidProject;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -22,6 +23,9 @@ public class PlayerScript : MonoBehaviour
                 ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Right));
             else
                 ComSim.instance.receiveMsgServer(MsgCoder.skillRequest(1, MsgCoder.Direction.Left));
-        Camera.main.transform.position = transform.position - new Vector3(0,-5,10);
+        float halfViewport = Camera.main.orthographicSize * Camera.main.aspect;
+        if (transform.position.x + halfViewport < 51f && transform.position.x - halfViewport > -51f)
+            Camera.main.transform.position = transform.position;
+        Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y + 5, -10);
     }
 }

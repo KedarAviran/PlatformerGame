@@ -56,7 +56,7 @@ namespace ServerSim
             foreach (SkillCD cd in skillCDs)
                 if (cd.skillID == skillID)
                     return cd.lastUse;
-            SkillCD skill = new SkillCD(skillID, DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds);
+            SkillCD skill = new SkillCD(skillID, 0);
             skillCDs.Add(skill);
             return DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds;
         }
@@ -102,7 +102,7 @@ namespace ServerSim
         {
             base.sendUpdateToClient();
             if (updateOnLadder)
-                ComSim.instance.receiveMsgClient(MsgCoder.onLadderOrder(figureID, onLadder));
+                ComSim.instance.receiveMsgClient(MsgCoder.setBoolOrder(figureID,"onLadder", onLadder));
             updateOnLadder = false;
         }
     }

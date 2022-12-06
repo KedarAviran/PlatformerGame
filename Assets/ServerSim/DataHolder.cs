@@ -48,7 +48,7 @@ namespace ServerSim
                         break;
                 }
             }
-            maps.Add(new Map(0, spawns, npcs, ladders, floors, new Vector2(-33, -11), walls));
+            maps.Add(new Map(0, spawns, npcs, ladders, floors, new Vector2(-1, -12), walls));
         }
         private static void LoadFiguresData(string fileLoc)
         {

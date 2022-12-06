@@ -4,6 +4,7 @@ using UnityEngine;
 using ServerSim;
 using MidProject;
 using System;
+using TMPro;
 
 public class ComSim : MonoBehaviour
 {
@@ -73,27 +74,35 @@ public class ComSim : MonoBehaviour
     private void handleNewLifeOfFigure(DataContainer data)
     {
         Figure figure = getFigureByID(data.integers[0]);
+        float margin = 1f;
+        GameObject popup = Instantiate(PrefabHolder.instance.getDamagePopup());
+        popup.GetComponent<TextMeshPro>().text = data.floats[1].ToString();
+        popup.transform.position = figure.gameObjectReference.transform.position + new Vector3(0, figure.gameObjectReference.GetComponent<SpriteRenderer>().bounds.size.y / 2 + margin);
         if (data.floats[0] <= 0)
-        {
-            figure.gameObjectReference.GetComponent<AnimationController>().setAnimation("Die");
-            figure.gameObjectReference.SetActive(false);
-        }
+            figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Die");
         else
-            figure.gameObjectReference.GetComponent<AnimationController>().setAnimation("Hit");
+        {
+            figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Hit");
+            figure.gameObjectReference.GetComponent<AnimationControl>().playSound("Hit");
+        }
+            
 
     }
     private void handleFigureSkill(DataContainer data)
     {
         Figure figure = getFigureByID(data.integers[0]);
-        figure.gameObjectReference.GetComponent<AnimationController>().setAnimation("Skill");
+        figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Skill");
         GameObject skill = Instantiate(PrefabHolder.instance.getSkillByID(data.integers[1]));
         skill.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
     }
     private void handleNewLocationOfFigure(DataContainer data) 
     {
         Figure figure = getFigureByID(data.integers[0]);
-        if (figure.gameObjectReference != null)
-            figure.gameObjectReference.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
+        if (figure.gameObjectReference == null)
+            return;
+        if (figure.gameObjectReference.transform.position == new Vector3(data.floats[0], data.floats[1], 0))
+            return;
+        figure.gameObjectReference.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
     }
     private void handleNewFigure(DataContainer data)
     {
@@ -116,10 +125,15 @@ public class ComSim : MonoBehaviour
                 break;
         }
     }
-    private void handleOnLadder(DataContainer data)
+    private void handleSetBool(DataContainer data)
     {
         Figure figure = getFigureByID(data.integers[0]);
-        figure.gameObjectReference.GetComponent<AnimationController>().setOnLadder(data.booleans[0]);
+        figure.gameObjectReference.GetComponent<Animator>().SetBool(data.strings[0], data.booleans[0]);
+    }
+    private void handleSetTrigger(DataContainer data)
+    {
+        Figure figure = getFigureByID(data.integers[0]);
+        figure.gameObjectReference.GetComponent<Animator>().SetTrigger(data.strings[0]);
     }
     List<DataContainer> cmds = new List<DataContainer>();
     public void executeOrders()
@@ -144,8 +158,11 @@ public class ComSim : MonoBehaviour
                 case (int)MsgCoder.ServerToClient.newFigure:
                     handleNewFigure(cont);
                     break;
-                case (int)MsgCoder.ServerToClient.onLadder:
-                    handleOnLadder(cont);
+                case (int)MsgCoder.ServerToClient.setBool:
+                    handleSetBool(cont);
+                    break;
+                case (int)MsgCoder.ServerToClient.setTrigger:
+                    handleSetTrigger(cont);
                     break;
             }
             
@@ -154,10 +171,6 @@ public class ComSim : MonoBehaviour
     public void Update()
     {
         executeOrders();
-    }
-    public void OnApplicationQuit()
-    {
-        map.stopThread();
     }
 
 

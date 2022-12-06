@@ -8,10 +8,26 @@ public class PrefabHolder : MonoBehaviour
     List<GameObject> figures = new List<GameObject>();
     [SerializeField]
     List<GameObject> skills = new List<GameObject>();
+    [SerializeField]
+    GameObject damagePopup;
+    [SerializeField]
+    AudioClip jump, hit;
     public static PrefabHolder instance;
     public void Start()
     {
         instance = this;
+    }
+    public AudioClip getJumpSound()
+    {
+        return jump;
+    }
+    public AudioClip getHitSound()
+    {
+        return hit;
+    }
+    public GameObject getDamagePopup()
+    {
+        return damagePopup;
     }
     public GameObject getFigureByType(int figureType)
     {
