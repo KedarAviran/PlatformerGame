@@ -64,7 +64,7 @@ public class ComSim : MonoBehaviour
     // SERVER
     private void handleMoveRequest(DataContainer data)
     {
-        map.moveFigure(playerID, data.integers[0]);
+        map.enableMovement(playerID, data.integers[0], data.booleans[0]);
     }
     private void handleSkillRequest(DataContainer data)
     {

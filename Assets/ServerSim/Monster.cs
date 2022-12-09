@@ -81,7 +81,7 @@ namespace ServerSim
             hasPatrolTarget = false;
             goIdle(rnd.Next(minIdleTime, maxIdleTime));
         }
-        public void patrol()
+        public void patrol(TimeSpan delta)
         {
             Random rnd = new Random();
             if (isAggro)
@@ -95,11 +95,11 @@ namespace ServerSim
             if (!hasPatrolTarget)
                 setNewPatrolTarget(rnd);
             if ((float)rnd.NextDouble() > (1-jumpPatrolChance))
-                move((int)MsgCoder.Direction.Jump);
+                move((int)MsgCoder.Direction.Jump , delta);
             if (patrolTarget > pos.X)
-                move((int)MsgCoder.Direction.Right);
+                move((int)MsgCoder.Direction.Right, delta);
             else
-                move((int)MsgCoder.Direction.Left);
+                move((int)MsgCoder.Direction.Left, delta);
         }
         public void gotAttacked(float dmg,Player player)
         {
@@ -108,7 +108,7 @@ namespace ServerSim
             isIdle = true;
             setAggroPlayer(player);
         }
-        public void aggroMove()
+        public void aggroMove(TimeSpan delta)
         {
             Random rnd = new Random();
             if (!isAggro)
@@ -116,11 +116,11 @@ namespace ServerSim
             if (!checkIdleTimer())
                 return;
             if (aggroPlayer.getPos().X > getPos().X)
-                move((int)MsgCoder.Direction.Right);
+                move((int)MsgCoder.Direction.Right, delta);
             if (aggroPlayer.getPos().X < getPos().X)
-                move((int)MsgCoder.Direction.Left);
+                move((int)MsgCoder.Direction.Left, delta);
             if ((float)rnd.NextDouble() > (1 - jumpPatrolChance))
-                move((int)MsgCoder.Direction.Jump);
+                move((int)MsgCoder.Direction.Jump, delta);
 
         }
         public new void sendUpdateToClient()

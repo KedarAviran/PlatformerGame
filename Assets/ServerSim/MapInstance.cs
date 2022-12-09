@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MidProject;
+using UnityEngine.Playables;
 
 namespace ServerSim
 {
@@ -18,7 +19,6 @@ namespace ServerSim
         Map map; // READ ONLY
         private const float DISTANCEFROMGROUND = 0f;
         private DateTime time;
-        Thread thread;
         public MapInstance(int mapID)
         {
             players = new List<Player>();
@@ -54,12 +54,12 @@ namespace ServerSim
             players.Add(player);
             ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.player, player.getPlayerType(), player.getPos()));
         }
-        public void moveFigure(int figureID , int dir)
+        public void moveFigure(int figureID , int dir , TimeSpan delta)
         {
             Figure figure = getPlayerByID(figureID);
             if (dir != (int)MsgCoder.Direction.Up && dir != (int)MsgCoder.Direction.Down)
             {
-                figure.move(dir);
+                figure.move(dir , delta);
                 checkFigureOnAir(figure);
                 wallCheck(figure);
                 if (figure is Player)
@@ -72,12 +72,20 @@ namespace ServerSim
                     clearFloors(figureID);
                     ((Player)figure).setOnLadder(true);
                     figure.setOnAir(false);
-                    figure.move(dir);
+                    figure.move(dir,delta);
                 }
                 else
                     ((Player)figure).setOnLadder(false);
             }
                 
+        }
+        public void enableMovement(int figureID, int dir , bool enable)
+        {
+            Figure figure = getPlayerByID(figureID);
+            if (dir == (int)MsgCoder.Direction.Jump)
+                moveFigure(figureID, dir, TimeSpan.Zero);
+            else
+                figure.enableMovement(dir, enable);
         }
         public void clearFloors(int figureID)
         {
@@ -169,6 +177,14 @@ namespace ServerSim
         {
             foreach (Player player in players)
             {
+                if (player.moveDown)
+                    moveFigure(player.getID(), (int)MsgCoder.Direction.Down, delta);
+                if (player.moveLeft)
+                    moveFigure(player.getID(), (int)MsgCoder.Direction.Left, delta);
+                if (player.moveUp)
+                    moveFigure(player.getID(), (int)MsgCoder.Direction.Up, delta);
+                if (player.moveRight)
+                    moveFigure(player.getID(), (int)MsgCoder.Direction.Right, delta);
                 foreach (Monster mon in monsters)
                     if (player.GetColider2D().isParallelColiding(mon.GetColider2D()))
                         player.gotAttacked(mon.getDamage());
@@ -179,8 +195,8 @@ namespace ServerSim
             }
             foreach (Monster mon in monsters)
             {
-                mon.patrol();
-                mon.aggroMove();
+                mon.patrol(delta);
+                mon.aggroMove(delta);
                 if (mon.getOnAir())
                     mon.applyGravity(delta);
                 wallCheck(mon);

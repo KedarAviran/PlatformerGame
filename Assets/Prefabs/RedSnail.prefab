@@ -102,8 +102,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   figureType: 102
   damage: 5
-  lifePoints: 100
-  moveSpeed: 0.05
+  lifePoints: 25
+  moveSpeed: 5
   jumpChance: 0.005
   isPlayer: 0
   isMonster: 1

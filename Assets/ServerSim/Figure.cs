@@ -10,6 +10,7 @@ namespace ServerSim
     {
         public bool update = false;
         private bool onAir = true;
+        public bool moveLeft, moveRight, moveUp, moveDown;
         protected Colider2D colider;
         protected int figureID;
         protected Vector2 pos = Vector2.Zero;
@@ -58,24 +59,42 @@ namespace ServerSim
         {
             return onAir;
         }
-        public void move(int dir)
+        public void enableMovement(int dir, bool enable)
         {
             switch (dir)
             {
                 case (int)MsgCoder.Direction.Right:
-                    updatePosition(pos + new Vector2(moveSpeed, 0));
+                    moveRight = enable;
                     break;
                 case (int)MsgCoder.Direction.Left:
-                    updatePosition(pos + new Vector2(-moveSpeed, 0));
+                    moveLeft = enable;
+                    break;
+                case (int)MsgCoder.Direction.Up:
+                    moveUp = enable;
+                    break;
+                case (int)MsgCoder.Direction.Down:
+                    moveDown = enable;
+                    break;
+            }
+        }
+        public void move(int dir , TimeSpan delta)
+        {
+            switch (dir)
+            {
+                case (int)MsgCoder.Direction.Right:
+                    updatePosition(pos + new Vector2(moveSpeed * (float)delta.TotalSeconds, 0));
+                    break;
+                case (int)MsgCoder.Direction.Left:
+                    updatePosition(pos + new Vector2(-moveSpeed * (float)delta.TotalSeconds, 0));
                     break;
                 case (int)MsgCoder.Direction.Jump:
                     jump();
                     break;
                 case (int)MsgCoder.Direction.Up:
-                    updatePosition(pos + new Vector2(0, moveSpeed));
+                    updatePosition(pos + new Vector2(0, moveSpeed * (float)delta.TotalSeconds));
                     break;
                 case (int)MsgCoder.Direction.Down:
-                    updatePosition(pos + new Vector2(0, -moveSpeed));
+                    updatePosition(pos + new Vector2(0, -moveSpeed * (float)delta.TotalSeconds));
                     break;
             }
             update = true;

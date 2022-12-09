@@ -34,11 +34,12 @@ namespace MidProject
             monster,
             npc
         }
-        public static byte[] moveRequest(Direction dir)
+        public static byte[] moveRequest(Direction dir , bool enable)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ClientToServer.moveRequest);
             buffer.writeInteger((int)dir);
+            buffer.writeBool(enable);
             byte[] array = buffer.ToArray();
             buffer.Dispose();
             return array;
@@ -48,6 +49,7 @@ namespace MidProject
             DataContainer container = new DataContainer();
             container.requestType = (int)ClientToServer.moveRequest;
             container.integers.Add(buffer.readInteger());
+            container.booleans.Add(buffer.readBool());
             buffer.Dispose();
             return container;
         }

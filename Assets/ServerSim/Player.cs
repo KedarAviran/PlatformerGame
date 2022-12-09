@@ -58,7 +58,7 @@ namespace ServerSim
                     return cd.lastUse;
             SkillCD skill = new SkillCD(skillID, 0);
             skillCDs.Add(skill);
-            return DateTime.Now.Subtract(DateTime.MinValue).TotalSeconds;
+            return 0;
         }
         private void removeSkillCD(int skillID)
         {
