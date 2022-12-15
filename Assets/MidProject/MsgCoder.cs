@@ -132,13 +132,14 @@ namespace MidProject
             buffer.Dispose();
             return container;
         }
-        public static byte[] newLifeOfFigureOrder(int figureID, float life , float damageTaken)
+        public static byte[] newLifeOfFigureOrder(int figureID, float life , float damageTaken , float lifePrecent)
         {
             ByteBuffer buffer = new ByteBuffer();
             buffer.writeInteger((int)ServerToClient.newLifeOfFigure);
             buffer.writeInteger(figureID);
             buffer.writeFloat(life);
             buffer.writeFloat(damageTaken);
+            buffer.writeFloat(lifePrecent);
             byte[] array = buffer.ToArray();
             buffer.Dispose();
             return array;
@@ -148,6 +149,7 @@ namespace MidProject
             DataContainer container = new DataContainer();
             container.requestType = (int)ServerToClient.newLifeOfFigure;
             container.integers.Add(buffer.readInteger());
+            container.floats.Add(buffer.readFloat());
             container.floats.Add(buffer.readFloat());
             container.floats.Add(buffer.readFloat());
             buffer.Dispose();

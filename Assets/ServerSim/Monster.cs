@@ -26,11 +26,12 @@ namespace ServerSim
         private float jumpPatrolChance = 0.005f;
         private float idleDuration = 0;
 
-        public Monster(int monsterType ,Colider2D colider,float lifePoints,float moveSpeed, float damage,float jumpChance)
+        public Monster(int monsterType ,Colider2D colider,float MAXHP, float moveSpeed, float damage,float jumpChance)
         {
             this.monsterType = monsterType;
             this.colider = colider;
-            this.lifePoints = lifePoints;
+            this.MAXHP = MAXHP;
+            this.lifePoints = MAXHP;
             this.moveSpeed = moveSpeed;
             this.jumpPatrolChance = jumpChance;
             this.damage = damage;

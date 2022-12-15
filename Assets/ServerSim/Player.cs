@@ -25,11 +25,12 @@ namespace ServerSim
         private int playerType;
         private bool onLadder = false;
         private bool updateOnLadder = false;
-        public Player(int playerType, Colider2D colider, float lifePoints, float moveSpeed, float damage)
+        public Player(int playerType, Colider2D colider, float MAXHP, float moveSpeed, float damage)
         {
             this.colider = colider;
             this.playerType = playerType;
-            this.lifePoints = lifePoints;
+            this.MAXHP = MAXHP;
+            this.lifePoints = MAXHP;
             this.moveSpeed = moveSpeed;
             this.damage = damage;
         }

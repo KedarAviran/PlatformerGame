@@ -15,7 +15,8 @@ namespace ServerSim
         protected int figureID;
         protected Vector2 pos = Vector2.Zero;
         protected float damage = 5;
-        protected float lifePoints = 100;
+        protected float MAXHP;
+        protected float lifePoints;
         protected float jumpVelocity = 0.5f;
         protected float baseGravityFactor = -1.5f; // unit per sec
         protected float verticalVelocity = 0;
@@ -115,7 +116,7 @@ namespace ServerSim
         protected void gotHit(float dmg)
         {
             lifePoints -= dmg;
-            ComSim.instance.receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints,dmg));
+            ComSim.instance.receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints,dmg,lifePoints/MAXHP));
         }
         public float getDamage()
         {

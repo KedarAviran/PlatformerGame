@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AnimationControl : MonoBehaviour
 {
     private Animator anim;
     private SpriteRenderer spriteRen;
     private Vector3 lastPos;
+    [SerializeField]
+    public Gradient LifeGradient;
+    public Slider slider;
+    public Image fill;
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -20,6 +25,12 @@ public class AnimationControl : MonoBehaviour
         if (sound == "Hit")
             GetComponent<AudioSource>().clip = PrefabHolder.instance.getHitSound();
         GetComponent<AudioSource>().Play();
+    }
+    public void setHealth(float precent)
+    {
+        fill.transform.parent.gameObject.SetActive(true);
+        slider.value = precent;
+        fill.color = LifeGradient.Evaluate(precent);
     }
     void FixedUpdate()
     {

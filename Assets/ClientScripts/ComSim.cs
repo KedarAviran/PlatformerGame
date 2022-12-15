@@ -85,8 +85,7 @@ public class ComSim : MonoBehaviour
             figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Hit");
             figure.gameObjectReference.GetComponent<AnimationControl>().playSound("Hit");
         }
-            
-
+        figure.gameObjectReference.GetComponent<AnimationControl>().setHealth(data.floats[2]);
     }
     private void handleFigureSkill(DataContainer data)
     {
