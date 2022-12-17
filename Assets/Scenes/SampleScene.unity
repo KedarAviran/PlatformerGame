@@ -706,7 +706,7 @@ GameObject:
   - component: {fileID: 201649665}
   - component: {fileID: 201649664}
   m_Layer: 5
-  m_Name: fill
+  m_Name: HPfill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -782,7 +782,7 @@ GameObject:
   - component: {fileID: 238455974}
   - component: {fileID: 238455973}
   m_Layer: 5
-  m_Name: fill
+  m_Name: EXPfill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -858,7 +858,7 @@ GameObject:
   - component: {fileID: 239079186}
   - component: {fileID: 239079185}
   m_Layer: 5
-  m_Name: Border
+  m_Name: HPBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1293,6 +1293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c097f806969d2e4c94b6156048c968f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hpSlider: {fileID: 883542514}
+  proggressSlider: {fileID: 1489728241}
 --- !u!4 &350800336
 Transform:
   m_ObjectHideFlags: 0
@@ -3340,7 +3342,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3613,7 +3615,7 @@ GameObject:
   - component: {fileID: 1651250503}
   - component: {fileID: 1651250502}
   m_Layer: 5
-  m_Name: Border
+  m_Name: EXPBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -5,6 +5,7 @@ using ServerSim;
 using MidProject;
 using System;
 using TMPro;
+using UnityEngine.UI;
 
 public class ComSim : MonoBehaviour
 {
@@ -25,7 +26,10 @@ public class ComSim : MonoBehaviour
     List<Figure> figures = new List<Figure>();
     private GameObject player;
     private int playerID;
-    
+    private float monsterCount = 0;
+    private float monstersAlive = 0;
+    public Slider hpSlider;
+    public Slider proggressSlider;
     void Start()
     {
         instance = this;
@@ -79,13 +83,21 @@ public class ComSim : MonoBehaviour
         popup.GetComponent<TextMeshPro>().text = data.floats[1].ToString();
         popup.transform.position = figure.gameObjectReference.transform.position + new Vector3(0, figure.gameObjectReference.GetComponent<SpriteRenderer>().bounds.size.y / 2 + margin);
         if (data.floats[0] <= 0)
+        {
             figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Die");
+            monstersAlive--;
+            proggressSlider.value = 1 - (monstersAlive / monsterCount);
+        }
         else
         {
             figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Hit");
             figure.gameObjectReference.GetComponent<AnimationControl>().playSound("Hit");
         }
-        figure.gameObjectReference.GetComponent<AnimationControl>().setHealth(data.floats[2]);
+        if (figure.figureID == playerID)
+            hpSlider.value = data.floats[2];
+        else
+            figure.gameObjectReference.GetComponent<AnimationControl>().setHealth(data.floats[2]);
+
     }
     private void handleFigureSkill(DataContainer data)
     {
@@ -120,6 +132,8 @@ public class ComSim : MonoBehaviour
                 GameObject monster = Instantiate(PrefabHolder.instance.getFigureByType(figureType));
                 monster.name = "monster ID: " + figureID;
                 monster.transform.position = new Vector3(data.floats[0], data.floats[1], 0);
+                monsterCount++;
+                monstersAlive = monsterCount;
                 figures.Add(new Figure(figureID, monster));
                 break;
         }
