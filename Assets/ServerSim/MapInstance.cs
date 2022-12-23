@@ -19,6 +19,7 @@ namespace ServerSim
         Map map; // READ ONLY
         private const float DISTANCEFROMGROUND = 0f;
         private DateTime time;
+        private bool gameRunnning = true;
         public MapInstance(int mapID)
         {
             players = new List<Player>();
@@ -157,12 +158,16 @@ namespace ServerSim
             foreach (Monster mon in monsterToRemove)
                 monsters.Remove(mon);
         }
+        public void closeInstance()
+        {
+            gameRunnning = false;
+        }
         public async void Update()
         {
             await Task.Run(() =>
             {
                 TimeSpan delta;
-                while (true)
+                while (gameRunnning)
                 {
                     delta = DateTime.UtcNow - time;
                     if (UPDATETIMER < delta.TotalSeconds)

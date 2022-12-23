@@ -21,6 +21,7 @@ public class ComSim : MonoBehaviour
         }
         
     }
+    public Transform worldCanvasTrasfrom;
     MapInstance map;
     public static ComSim instance;
     List<Figure> figures = new List<Figure>();
@@ -30,10 +31,23 @@ public class ComSim : MonoBehaviour
     private float monstersAlive = 0;
     public Slider hpSlider;
     public Slider proggressSlider;
+    private GameObject mapBackground;
     void Start()
     {
         instance = this;
-        map = new MapInstance(0);
+        setupMap(0);
+    }
+    public void setupMap(int mapID)
+    {
+        if (mapBackground != null)
+            Destroy(mapBackground);
+        if (map != null)
+            map.closeInstance();
+        figures.Clear();
+        monstersAlive = 0;
+        monsterCount = 0;
+        map = new MapInstance(mapID);
+        mapBackground = Instantiate(PrefabHolder.instance.getMapByID(mapID), worldCanvasTrasfrom);
         map.addPlayer();
     }
     public Figure getFigureByID(int figureID)

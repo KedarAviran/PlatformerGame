@@ -5,6 +5,8 @@ using UnityEngine;
 public class PrefabHolder : MonoBehaviour
 {
     [SerializeField]
+    List<GameObject> maps = new List<GameObject>();
+    [SerializeField]
     List<GameObject> figures = new List<GameObject>();
     [SerializeField]
     List<GameObject> skills = new List<GameObject>();
@@ -13,7 +15,7 @@ public class PrefabHolder : MonoBehaviour
     [SerializeField]
     AudioClip jump, hit;
     public static PrefabHolder instance;
-    public void Start()
+    public void Awake()
     {
         instance = this;
     }
@@ -28,6 +30,10 @@ public class PrefabHolder : MonoBehaviour
     public GameObject getDamagePopup()
     {
         return damagePopup;
+    }
+    public GameObject getMapByID(int mapID)
+    {
+        return maps[mapID];
     }
     public GameObject getFigureByType(int figureType)
     {
