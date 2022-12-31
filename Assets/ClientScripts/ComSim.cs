@@ -31,11 +31,13 @@ public class ComSim : MonoBehaviour
     private float monstersAlive = 0;
     public Slider hpSlider;
     public Slider proggressSlider;
+    public GameObject mainMenu;
+    public GameObject restartMenu;
     private GameObject mapBackground;
     void Start()
     {
         instance = this;
-        setupMap(0);
+        //setupMap(0);
     }
     public void setupMap(int mapID)
     {
@@ -49,6 +51,27 @@ public class ComSim : MonoBehaviour
         map = new MapInstance(mapID);
         mapBackground = Instantiate(PrefabHolder.instance.getMapByID(mapID), worldCanvasTrasfrom);
         map.addPlayer();
+    }
+    public void quit()
+    {
+        Application.Quit();
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
+    public void setMainMenu(bool set)
+    {
+        if (mapBackground != null)
+            Destroy(mapBackground);
+        restartMenu.SetActive(!set);
+        mainMenu.SetActive(set);
+        mainMenu.transform.parent.gameObject.SetActive(set);
+    }
+    public void setRestartMenu(bool set)
+    {
+        if (mapBackground != null)
+            Destroy(mapBackground);
+        mainMenu.SetActive(!set);
+        restartMenu.SetActive(set);
+        restartMenu.transform.parent.gameObject.SetActive(set);
     }
     public Figure getFigureByID(int figureID)
     {
@@ -101,16 +124,18 @@ public class ComSim : MonoBehaviour
             figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Die");
             monstersAlive--;
             proggressSlider.value = 1 - (monstersAlive / monsterCount);
+            if (figure.figureID == playerID)
+                setRestartMenu(true);
         }
         else
         {
             figure.gameObjectReference.GetComponent<Animator>().SetTrigger("Hit");
             figure.gameObjectReference.GetComponent<AnimationControl>().playSound("Hit");
         }
-        if (figure.figureID == playerID)
-            hpSlider.value = data.floats[2];
-        else
-            figure.gameObjectReference.GetComponent<AnimationControl>().setHealth(data.floats[2]);
+        //if (figure.figureID == playerID)
+        //    hpSlider.value = data.floats[2];
+        //else
+        figure.gameObjectReference.GetComponent<AnimationControl>().setHealth(data.floats[2]);
 
     }
     private void handleFigureSkill(DataContainer data)
