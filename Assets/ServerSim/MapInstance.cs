@@ -14,10 +14,10 @@ namespace ServerSim
     {
         private int figureIDCounter = 0;
         const double UPDATETIMER = 0.01; // IN  SECONDS
+        const float DISTANCEFROMGROUND = 0.01f;
         List<Player> players;
         List<Monster> monsters;
         Map map; // READ ONLY
-        private const float DISTANCEFROMGROUND = 0f;
         private DateTime time;
         private bool gameRunnning = true;
         public MapInstance(int mapID)
@@ -73,7 +73,9 @@ namespace ServerSim
                     clearFloors(figureID);
                     ((Player)figure).setOnLadder(true);
                     figure.setOnAir(false);
+                    checkFigureonLadderColison(figure);
                     figure.move(dir,delta);
+                    checkFigureonLadderColison(figure);
                 }
                 else
                     ((Player)figure).setOnLadder(false);
@@ -101,6 +103,12 @@ namespace ServerSim
                     return true;
             return false;
         }
+        private void checkFigureonLadderColison(Figure figure)
+        {
+            foreach (Floor floor in map.getFloors())
+                if (floor.checkFigureColision(figure))
+                    figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y) + DISTANCEFROMGROUND));
+        }
         private void checkFigureOnAir(Figure figure)
         {
             if (figure.getVerticalVelocity() > 0)
@@ -109,7 +117,7 @@ namespace ServerSim
                 if (floor.checkFigureColision(figure))
                 {
                     if (figure.getOnAir())
-                        figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y) + DISTANCEFROMGROUND));
+                        figure.updatePosition(new Vector2(figure.getPos().X, floor.getYofFloor() + (figure.getPos().Y - figure.GetColider2D().getBotLeft().Y)));
                     figure.setOnAir(false);
                     if (figure is Monster)
                         ((Monster)figure).setPatrolLimit(floor.GetColider2D().getTopLeft().X, floor.GetColider2D().getTopRight().X);
