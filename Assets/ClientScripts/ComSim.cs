@@ -6,6 +6,7 @@ using MidProject;
 using System;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class ComSim : MonoBehaviour
 {
@@ -45,12 +46,18 @@ public class ComSim : MonoBehaviour
             Destroy(mapBackground);
         if (map != null)
             map.closeInstance();
-        figures.Clear();
+        removeFigures();
         monstersAlive = 0;
         monsterCount = 0;
         map = new MapInstance(mapID);
         mapBackground = Instantiate(PrefabHolder.instance.getMapByID(mapID), worldCanvasTrasfrom);
         map.addPlayer();
+    }
+    public void removeFigures()
+    {
+        foreach (Figure fig in figures)
+            Destroy(fig.gameObjectReference);
+        figures.Clear();
     }
     public void quit()
     {
@@ -125,7 +132,11 @@ public class ComSim : MonoBehaviour
             monstersAlive--;
             proggressSlider.value = 1 - (monstersAlive / monsterCount);
             if (figure.figureID == playerID)
+            {
                 setRestartMenu(true);
+                map.closeInstance();
+                removeFigures();
+            }
         }
         else
         {
