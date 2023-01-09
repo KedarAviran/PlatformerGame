@@ -37,7 +37,7 @@ namespace ServerSim
                 mon.setID(++figureIDCounter);
                 mon.updatePosition(spawn.pos);
                 monsters.Add(mon);
-                ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.monster, mon.getMonsterType(), mon.getPos()));
+                ComSim.getInstance().receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.monster, mon.getMonsterType(), mon.getPos()));
             }
         }
         public Player getPlayerByID(int figureID)
@@ -53,7 +53,7 @@ namespace ServerSim
             player.updatePosition(map.getSpawnPoint());
             player.setID(++figureIDCounter);
             players.Add(player);
-            ComSim.instance.receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.player, player.getPlayerType(), player.getPos()));
+            ComSim.getInstance().receiveMsgClient(MsgCoder.newFigureOrder(figureIDCounter, (int)MsgCoder.Figures.player, player.getPlayerType(), player.getPos()));
         }
         public void moveFigure(int figureID , int dir , TimeSpan delta)
         {
@@ -154,7 +154,7 @@ namespace ServerSim
                 skillColider.updateColider(player.getPos() + skill.getReletivePos());
             else
                 skillColider.updateColider(player.getPos() + new Vector2(-1 * skill.getReletivePos().X, skill.getReletivePos().Y));
-            ComSim.instance.receiveMsgClient(MsgCoder.figureSkillOrder(playerID, skillID, skillColider.getCenter()));
+            ComSim.getInstance().receiveMsgClient(MsgCoder.figureSkillOrder(playerID, skillID, skillColider.getCenter()));
             List<Monster> monsterToRemove = new List<Monster>();
             foreach (Monster mon in monsters)
                 if (mon.GetColider2D().isParallelColiding(skillColider))

@@ -128,7 +128,7 @@ namespace ServerSim
         {
             base.sendUpdateToClient();
             if (updateResume)
-                ComSim.instance.receiveMsgClient(MsgCoder.setTriggerOrder(figureID, "Resume"));
+                ComSim.getInstance().receiveMsgClient(MsgCoder.setTriggerOrder(figureID, "Resume"));
             updateResume = false;
         }
         public Monster Clone()

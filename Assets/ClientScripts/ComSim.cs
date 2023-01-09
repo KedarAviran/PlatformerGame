@@ -24,7 +24,7 @@ public class ComSim : MonoBehaviour
     }
     public Transform worldCanvasTrasfrom;
     MapInstance map;
-    public static ComSim instance;
+    private static ComSim instance;
     List<Figure> figures = new List<Figure>();
     private GameObject player;
     private int playerID;
@@ -35,10 +35,14 @@ public class ComSim : MonoBehaviour
     public GameObject mainMenu;
     public GameObject restartMenu;
     private GameObject mapBackground;
+    private ComSim(){}
     void Start()
     {
         instance = this;
-        //setupMap(0);
+    }
+    public static ComSim getInstance()
+    {
+        return instance;
     }
     public void setupMap(int mapID)
     {

@@ -103,7 +103,7 @@ namespace ServerSim
         {
             base.sendUpdateToClient();
             if (updateOnLadder)
-                ComSim.instance.receiveMsgClient(MsgCoder.setBoolOrder(figureID,"onLadder", onLadder));
+                ComSim.getInstance().receiveMsgClient(MsgCoder.setBoolOrder(figureID,"onLadder", onLadder));
             updateOnLadder = false;
         }
     }

@@ -116,7 +116,7 @@ namespace ServerSim
         protected void gotHit(float dmg)
         {
             lifePoints -= dmg;
-            ComSim.instance.receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints,dmg,lifePoints/MAXHP));
+            ComSim.getInstance().receiveMsgClient(MsgCoder.newLifeOfFigureOrder(figureID, lifePoints,dmg,lifePoints/MAXHP));
         }
         public float getDamage()
         {
@@ -143,7 +143,7 @@ namespace ServerSim
         public void sendUpdateToClient()
         {
             if(update)
-                ComSim.instance.receiveMsgClient(MsgCoder.newLocationOrder(figureID, pos));
+                ComSim.getInstance().receiveMsgClient(MsgCoder.newLocationOrder(figureID, pos));
             update = false;
         }
 
